@@ -1,10 +1,10 @@
 var ruleSets = {
-  standard: 1,
-  old: 2,
-  family: 3,
-  party: 4,
-  custom: 5
-}
+  standard: 1, // 2nd edition rules
+  old: 2, // 1st edition rules
+  family: 3, // Family rules
+  party: 4, // Party rules
+  custom: 5 // Custom rules
+};
 
 var config = {
   id: ruleSets.standard, // Preset game rules
@@ -20,14 +20,144 @@ var config = {
   centerPayout: 2, // The payout multiplier for the middle slot
   endPayout: 5, // The maximum payout multiplier for player answers
   elvisPayout: 6 // Elvis's payout multiplier
-}
+};
+
+var players = [];
+var maxPlayerId = 0;
+var round = 1;
+var betting = false;
 
 function newGame() {
+  round = 1;
+  betting = false;
+  updatePlayerList();
 }
 
 function confirmNewGame() {
   if (window.confirm("Are you sure you want to end the current game?"))
     newGame();
+}
+
+function setStatusMessage(msg) {
+  document.getElementById("message").innerHTML = '<h3>' + msg + '</h3>';
+}
+
+function addPlayer() {
+  var player = {
+    id: ++maxPlayerId,
+    name: 'Player ' + (players.length + 1),
+    cash: config.startingCash,
+    guess: null,
+    bet1Amount: null,
+    bet1Guess: null,
+    bet2Amount: null,
+    bet2Guess: null
+  };
+
+  var name = window.prompt('Enter player name', player.name);
+
+  if (name !== null) {
+    if (name.length > 0)
+      player.name = name;
+
+    players.push(player);
+    updatePlayerList();
+  }
+}
+
+function removePlayer(id) {
+  var i = players.findIndex((player) => player.id == id);
+  var name = players[i].name;
+
+  if (i >= 0 && window.confirm("Are you sure you want to remove player '" + name + "'?")) {
+    players.splice(i, 1);
+    updatePlayerList();
+  }
+}
+
+function updatePlayerList() {
+  var output = '<table class="listing">';
+  output += '<tr><th></th><th>Player</th><th>Chips</th>';
+
+  if (betting)
+    output += '<th>First Wager</th><th>Second Wager</th></tr>';
+  else
+    output += '<th>Guess</th></tr>';
+
+  // Sort players by cash
+  players.sort((p1,p2) => p2.cash - p1.cash);
+  for (let player of players) {
+    output += '<tr><td><a onclick="removePlayer(' + player.id + ')">&times;</a></td>';
+    output += '<td>' + player.name + '</td><td>$' + player.cash + '</td>';
+
+    if (betting) {
+      output += '<td>' + generateWagerInputs(player.id, 1) + '</td>';
+      output += '<td>' + generateWagerInputs(player.id, 2) + '</td>';
+    } else {
+      output += '<td><input type="number" class="guess" value="';
+      if (player.guess !== null)
+        output += player.guess;
+      output += '" /></td>'
+    }
+    output += '</tr>';
+  }
+
+  output += '<tr><td></td><td><a onclick="addPlayer()">Add Player</a></td><td></td>';
+  if (betting)
+    output += '<td><a onclick="confirmBets()">Confirm Bets</a></td><td></td>';
+  else
+    output += '<td><a onclick="confirmGuesses()">Confirm Guesses</a></td>';
+  output += '</tr></table>';
+
+  document.getElementById("playerList").innerHTML = output;
+
+  if (betting)
+    updateWagerSelects();
+}
+
+function generateWagerInputs(playerId, wagerNum) {
+  var output = '';
+  var limit = currentBetLimit();
+
+  var wagerChipValue = (wagerNum == 1) ? config.wagerChipValue1 : config.wagerChipValue2;
+
+  if (wagerChipValue > 0)
+    output += wagerChipValue + ' ';
+  if (limit === null || limit > 0) {
+    if (wagerChipValue > 0)
+      output += '+ ';
+    output += '<input type="number" class="numInput" id="player'
+      + playerId + 'Wager' + wagerNum + 'Amount" /> chip(s) on ';
+  } else {
+    output += 'chip';
+    if (wagerChipValue != 1)
+      output += 's';
+    output += ' on ';
+  }
+
+  output += '<select id="player' + playerId + 'Wager' + wagerNum + 'Guess" ';
+  output += 'onchange="updateBets()">';
+  output += '</select>';
+
+  return output;
+}
+
+function updateWagerSelects() {
+}
+
+function currentBetLimit() {
+  if (config.numRounds === null)
+    return config.betLimit;
+  else
+    return (round == config.numRounds) ? config.lastRoundBetLimit : config.betLimit;
+}
+
+function confirmGuesses() {
+  betting = true;
+  updatePlayerList();
+}
+
+function confirmBets() {
 }
 
 function loadOptions() {

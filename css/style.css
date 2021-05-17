@@ -8,6 +8,7 @@ h1 {
 
 a {
   text-decoration: none;
+  color: blue;
 }
 
 a:hover,
@@ -54,10 +55,10 @@ a:focus {
 /*   float: right; */
 /* } */
 
-/* table { */
-/*   border-collapse: collapse; */
-/*   border-style: hidden; */
-/* } */
+table {
+  border-collapse: collapse;
+  border-style: hidden;
+}
 
 /* .board { */
 /*   background-color: #007700; */
@@ -69,10 +70,11 @@ a:focus {
 /*   border: 2px solid white; */
 /* } */
 
-/* th.listing, td.listing { */
-/*   border-bottom: 1px solid #dddddd; */
-/* } */
+table.listing th, table.listing td {
+  border: 1px solid #dddddd;
+  padding: 4px;
+}
 
-/* .cell-row { */
-/*   height: 256px; */
-/* } */
+.guess {
+  width: 128px;
+}
