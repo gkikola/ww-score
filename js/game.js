@@ -104,7 +104,7 @@ function updatePlayerList() {
 
   output += '<tr><td></td><td><a onclick="addPlayer()">Add Player</a></td><td></td>';
   if (betting)
-    output += '<td><a onclick="confirmBets()">Confirm Bets</a></td><td></td>';
+    output += '<td colspan="2"><a onclick="confirmBets()">Confirm Bets</a></td>';
   else
     output += '<td><a onclick="confirmGuesses()">Confirm Guesses</a></td>';
   output += '</tr></table>';
