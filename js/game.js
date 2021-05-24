@@ -161,6 +161,7 @@ function confirmBets() {
 }
 
 function loadOptions() {
+  document.getElementById("overlay").style.display = "block";
   document.getElementById("options").style.display = "block";
 
   // Select rule set
@@ -326,6 +327,7 @@ function customizeOptions() {
 }
 
 function applyOptions() {
+  document.getElementById("overlay").style.display = "none";
   document.getElementById("options").style.display = "none";
 
   // Get rule set
@@ -383,13 +385,16 @@ function applyOptions() {
 }
 
 function cancelOptions() {
+  document.getElementById("overlay").style.display = "none";
   document.getElementById("options").style.display = "none";
 }
 
 function loadAbout() {
+  document.getElementById("overlay").style.display = "block";
   document.getElementById("about").style.display = "block";
 }
 
 function closeAbout() {
+  document.getElementById("overlay").style.display = "none";
   document.getElementById("about").style.display = "none";
 }

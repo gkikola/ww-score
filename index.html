@@ -9,109 +9,120 @@
   </head>
   <body onload="newGame()">
     <h1>Wits & Wagers Score Keeper</h1>
-    <button type="button" onclick="confirmNewGame()">New Game</button>
-    <button type="button" onclick="loadOptions()">Options</button>
-    <button type="button" onclick="loadAbout()">About</button>
+
+    <div class="grouping">
+      <button type="button" onclick="confirmNewGame()">New Game</button>
+      <button type="button" onclick="loadOptions()">Options</button>
+      <button type="button" onclick="loadAbout()">About</button>
+    </div>
 
     <div id="message"></div>
     <div id="board"></div>
     <div id="playerList"></div>
 
+    <div id="overlay" class="modal-overlay"></div>
+
     <!-- Begin About dialog box -->
     <div class="modal" id="about">
-      <div class="dialog">
-        <strong>About</strong>
-        <p>
-          Copyright &copy; 2021 <a href="https://www.gregkikola.com/">Greg Kikola</a>.
-          License: MIT
-        </p>
-        <button type="button" onclick="closeAbout()">Okay</button>
+      <strong>About</strong>
+      <div class="modal-content">
+        Copyright &copy; 2021 <a href="https://www.gregkikola.com/">Greg Kikola</a>.
+        License: MIT
       </div>
+      <button type="button" onclick="closeAbout()">Okay</button>
     </div>
     <!-- End About dialog box -->
 
     <!-- Begin Options dialog box -->
     <div class="modal" id="options">
-      <div class="dialog">
-        <strong>Options</strong>
-        <div class="optionsContainer">
-          <p>
-            Game rules:
-            <select name="ruleSet" id="ruleSet" onchange="updateOptions()">
-              <option value="secondEd">Wits & Wagers Second Edition</option>
-              <option value="firstEd">Wits & Wagers First Edition</option>
-              <option value="family">Wits & Wagers Family</option>
-              <option value="party">Wits & Wagers Party</option>
-              <option value="custom">Custom Rules</option>
-            </select>
-          </p>
-          <p>
-            Game ends:
+      <strong>Options</strong>
+      <div class="modal-content">
+        <div class="option">
+          <label for="ruleSet">Game rules:</label>
+          <select name="ruleSet" id="ruleSet" onchange="updateOptions()">
+            <option value="secondEd">Wits & Wagers Second Edition</option>
+            <option value="firstEd">Wits & Wagers First Edition</option>
+            <option value="family">Wits & Wagers Family</option>
+            <option value="party">Wits & Wagers Party</option>
+            <option value="custom">Custom Rules</option>
+          </select>
+        </div>
+        <div class="option">
+          <fieldset>
+            <legend>Game ends:</legend>
             <div>
               <input type="radio" id="limitRounds" name="endCondition"
-                     onchange="customizeOptions()" /> after
+                     onchange="customizeOptions()" />
+              <label for="limitRounds">after
               <input type="number" id="numRounds" class="numInput"
-                     onchange="customizeOptions()" /> rounds
+                     onchange="customizeOptions()" /> rounds</label>
             </div>
             <div>
               <input type="radio" id="limitScore" name="endCondition"
-                     onchange="customizeOptions()" /> when someone scores
+                     onchange="customizeOptions()" />
+              <label for="limitScore">when someone scores
               <input type="number" id="winningScore" class="numInput"
-                     onchange="customizeOptions()" /> points
+                     onchange="customizeOptions()" /> points</label>
             </div>
-          </p>
-          <p>
-            First wager value: <input type="number" id="wagerVal1" class="numInput"
-                                      onchange="customizeOptions()" />
-          </p>
-          <p>
-            Second wager value: <input type="number" id="wagerVal2" class="numInput"
-                                       onchange="customizeOptions()" />
-          </p>
-          <p>
-            Starting chips: <input type="number" id="startingCash" class="numInput"
-                                   onchange="customizeOptions()" />
-          </p>
-          <p>
-            <input type="checkbox" id="limitBets"
-                   onchange="customizeOptions()" /> Limit bets to
-            <input type="number" id="maxBet" class="numInput"
-                   onchange="customizeOptions()" /> chips until the last round
-          </p>
-          <p>
-            <input type="checkbox" id="limitBetsLastRound"
-                   onchange="customizeOptions()" /> Limit bets in the last round to
-            <input type="number" id="maxBetLastRound" class = "numInput"
-                   onchange="customizeOptions()" /> chips
-          </p>
-          <p>
-            Correct answer bonus: <input type="number" id="correctAnswerBonus" class="numInput"
-                                         onchange="customizeOptions()" />
-          </p>
-          <p>
-            Additional bonus for exact answers:
-            <input type="number" id="exactAnswerBonus" class="numInput"
-                   onchange="customizeOptions()" />
-          </p>
-          <p>
-            Payout multiplier for middle answer:
-            <input type="number" id="centerPayout" class="numInput"
-                   onchange="customizeOptions()" />
-          </p>
-          <p>
-            Maximum payout multiplier for player answers:
-            <input type="number" id="endPayout" class="numInput"
-                   onchange="customizeOptions()" />
-          </p>
-          <p>
-            Payout multiplier for minimum slot (Elvis):
-            <input type="number" id="elvisPayout" class="numInput"
-                   onchange="customizeOptions()" />
-          </p>
+          </fieldset>
         </div>
-        <button type="button" onclick="applyOptions()">Apply</button>
-        <button type="button" onclick="cancelOptions()">Cancel</button>
+        <div class="option">
+          <label for="wagerVal1">First wager value:</label>
+          <input type="number" id="wagerVal1" class="numInput"
+                 onchange="customizeOptions()" />
+        </div>
+        <div class="option">
+          <label for="wagerVal2">Second wager value:</label>
+          <input type="number" id="wagerVal2" class="numInput"
+                 onchange="customizeOptions()" />
+        </div>
+        <div class="option">
+          <label for="startingCash">Starting chips:</label>
+          <input type="number" id="startingCash" class="numInput"
+                 onchange="customizeOptions()" />
+        </div>
+        <div class="option">
+          <input type="checkbox" id="limitBets"
+                 onchange="customizeOptions()" />
+          <label for="limitBets">Limit bets to
+          <input type="number" id="maxBet" class="numInput"
+                 onchange="customizeOptions()" /> chips until the last round</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="limitBetsLastRound"
+                 onchange="customizeOptions()" />
+          <label for="limitBetsLastRound">Limit bets in the last round to
+          <input type="number" id="maxBetLastRound" class = "numInput"
+                 onchange="customizeOptions()" /> chips</label>
+        </div>
+        <div class="option">
+          <label for="correctAnswerBonus">Correct answer bonus:</label>
+          <input type="number" id="correctAnswerBonus" class="numInput"
+                 onchange="customizeOptions()" />
+        </div>
+        <div class="option">
+          <label for="exactAnswerBonus">Additional bonus for exact answers:</label>
+          <input type="number" id="exactAnswerBonus" class="numInput"
+                 onchange="customizeOptions()" />
+        </div>
+        <div class="option">
+          <label for="centerPayout">Payout multiplier for middle answer:</label>
+          <input type="number" id="centerPayout" class="numInput"
+                 onchange="customizeOptions()" />
+        </div>
+        <div class="option">
+          <label for="endPayout">Maximum payout multiplier for player answers:</label>
+          <input type="number" id="endPayout" class="numInput"
+                 onchange="customizeOptions()" />
+        </div>
+        <div class="option">
+          <label for="elvisPayout">Payout multiplier for minimum slot (Elvis):</label>
+          <input type="number" id="elvisPayout" class="numInput"
+                 onchange="customizeOptions()" />
+        </div>
       </div>
+      <button type="button" onclick="applyOptions()">Apply</button>
+      <button type="button" onclick="cancelOptions()">Cancel</button>
     </div>
     <!-- End Options dialog box -->
 
