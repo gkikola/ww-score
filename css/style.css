@@ -41,27 +41,20 @@ a:focus {
   top: 50%;
   transform: translate(-50%, -50%);
 
-  max-width: 100vw;
-  max-height: 100vh;
-
+  max-width: 95vw;
+  max-height: 95vh;
+  padding: 16px;
   overflow: auto;
 
-  border: 1px solid blue;
+  border: 1px solid black;
   background-color: white;
-
-  padding: 16px;
 }
 
 .modal-content {
-  position: relative;
-  top: 0;
-  left: 0;
+  max-height: 256px;
   overflow: auto;
 
-  max-width: min(500px, 100%);
-  max-height: min(20px, 100%);
-
-  border: 1px solid green;
+  border: 1px solid gray;
   padding: 16px;
   margin: 16px 0;
 }
