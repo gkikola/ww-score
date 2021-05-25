@@ -85,45 +85,26 @@ function removePlayer(id) {
 }
 
 function updatePlayerList() {
-  let output = '<table class="listing">';
-  output += '<tr><th></th><th>Player</th><th>Chips</th>';
+  let output = '';
 
-  let betting = wwApp.gameState.betting;
-  if (betting)
-    output += '<th>First Wager</th><th>Second Wager</th></tr>';
-  else
-    output += '<th>Guess</th></tr>';
+  // Copy player list
+  let players = [...wwApp.gameState.players];
 
-  // Sort players by cash
-  let players = wwApp.gameState.players;
-  players.sort((p1,p2) => p2.cash - p1.cash);
+  // Sort player list by cash, descending
+  players.sort((p1, p2) => p2.cash - p1.cash);
+
   for (let player of players) {
-    output += '<tr><td><a onclick="removePlayer(' + player.id + ')">&times;</a></td>';
-    output += '<td>' + player.name + '</td><td>$' + player.cash + '</td>';
-
-    if (betting) {
-      output += '<td>' + generateWagerInputs(player.id, 1) + '</td>';
-      output += '<td>' + generateWagerInputs(player.id, 2) + '</td>';
-    } else {
-      output += '<td><input type="number" class="guess" value="';
-      if (player.guess !== null)
-        output += player.guess;
-      output += '" id="player' + player.id + 'guess" /></td>'
-    }
-    output += '</tr>';
+    output += '<div class="player">';
+    output += '<div class="player-name">' + player.name;
+    output += '<span class="player-controls">';
+    output += '<a href="#" class="game-icon material-icons" ';
+    output += 'onclick="loadDialog(\'remove-player\')">delete</a>';
+    output += '</span></div>';
+    output += '<div class="player-cash">$' + player.cash + '</div>';
+    output += '</div>';
   }
 
-  output += '<tr><td></td><td><a onclick="addPlayer()">Add Player</a></td><td></td>';
-  if (betting)
-    output += '<td colspan="2"><a onclick="confirmBets()">Confirm Bets</a></td>';
-  else
-    output += '<td><a onclick="confirmGuesses()">Confirm Guesses</a></td>';
-  output += '</tr></table>';
-
-  document.getElementById("playerList").innerHTML = output;
-
-  if (betting)
-    updateWagerSelects();
+  document.getElementById("player-list").innerHTML = output;
 }
 
 function generateWagerInputs(playerId, wagerNum) {
