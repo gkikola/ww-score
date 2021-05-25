@@ -1,4 +1,4 @@
-var ruleSets = {
+const ruleSets = {
   standard: 1, // 2nd edition rules
   old: 2, // 1st edition rules
   family: 3, // Family rules
@@ -6,30 +6,33 @@ var ruleSets = {
   custom: 5 // Custom rules
 };
 
-var config = {
-  id: ruleSets.standard, // Preset game rules
-  numRounds: 7, // Number of rounds before game ends
-  winningScore: null, // Winning score, if any
-  wagerChipValue1: 1, // Base value of first wager
-  wagerChipValue2: 1, // Base value of second wager
-  startingCash: 0, // Starting number of chips
-  betLimit: null, // Maximum chips that can be bet (except in last round)
-  lastRoundBetLimit: null, // Maximum chips that can be bet in the last round
-  correctAnswerBonus: 3, // Bonus chips for closest answer without going over
-  exactAnswerBonus: 0, // Extra bonus for getting an answer exactly
-  centerPayout: 2, // The payout multiplier for the middle slot
-  endPayout: 5, // The maximum payout multiplier for player answers
-  elvisPayout: 6 // Elvis's payout multiplier
-};
-
-var players = [];
-var maxPlayerId = 0;
-var round = 1;
-var betting = false;
+var wwApp = {
+  config: {
+    id: ruleSets.standard, // Preset game rules
+    numRounds: 7, // Number of rounds before game ends
+    winningScore: null, // Winning score, if any
+    wagerChipValue1: 1, // Base value of first wager
+    wagerChipValue2: 1, // Base value of second wager
+    startingCash: 0, // Starting number of chips
+    betLimit: null, // Maximum chips that can be bet (except in last round)
+    lastRoundBetLimit: null, // Maximum chips that can be bet in the last round
+    correctAnswerBonus: 3, // Bonus chips for closest answer without going over
+    exactAnswerBonus: 0, // Extra bonus for getting an answer exactly
+    centerPayout: 2, // The payout multiplier for the middle slot
+    endPayout: 5, // The maximum payout multiplier for player answers
+    elvisPayout: 6 // Elvis's payout multiplier
+  },
+  gameState: {
+    players: [],
+    maxPlayerId: 0,
+    round: 1,
+    betting: false
+  }
+}
 
 function newGame() {
-  round = 1;
-  betting = false;
+  wwApp.gameState.round = 1;
+  wwApp.gameState.betting = false;
   updatePlayerList();
 }
 
@@ -43,10 +46,10 @@ function setStatusMessage(msg) {
 }
 
 function addPlayer() {
-  var player = {
-    id: ++maxPlayerId,
-    name: 'Player ' + (players.length + 1),
-    cash: config.startingCash,
+  let player = {
+    id: ++wwApp.gameState.maxPlayerId,
+    name: 'Player ' + (wwApp.gameState.players.length + 1),
+    cash: wwApp.config.startingCash,
     guess: null,
     bet1Amount: null,
     bet1Guess: null,
@@ -54,20 +57,21 @@ function addPlayer() {
     bet2Guess: null
   };
 
-  var name = window.prompt('Enter player name', player.name);
+  let name = window.prompt('Enter player name', player.name);
 
   if (name !== null) {
     if (name.length > 0)
       player.name = name;
 
-    players.push(player);
+    wwApp.gameState.players.push(player);
     updatePlayerList();
   }
 }
 
 function removePlayer(id) {
-  var i = players.findIndex((player) => player.id == id);
-  var name = players[i].name;
+  let players = wwApp.gameState.players;
+  let i = players.findIndex((player) => player.id == id);
+  let name = players[i].name;
 
   if (i >= 0 && window.confirm("Are you sure you want to remove player '" + name + "'?")) {
     players.splice(i, 1);
@@ -76,15 +80,17 @@ function removePlayer(id) {
 }
 
 function updatePlayerList() {
-  var output = '<table class="listing">';
+  let output = '<table class="listing">';
   output += '<tr><th></th><th>Player</th><th>Chips</th>';
 
+  let betting = wwApp.gameState.betting;
   if (betting)
     output += '<th>First Wager</th><th>Second Wager</th></tr>';
   else
     output += '<th>Guess</th></tr>';
 
   // Sort players by cash
+  let players = wwApp.gameState.players;
   players.sort((p1,p2) => p2.cash - p1.cash);
   for (let player of players) {
     output += '<tr><td><a onclick="removePlayer(' + player.id + ')">&times;</a></td>';
@@ -116,10 +122,10 @@ function updatePlayerList() {
 }
 
 function generateWagerInputs(playerId, wagerNum) {
-  var output = '';
-  var limit = currentBetLimit();
-
-  var wagerChipValue = (wagerNum == 1) ? config.wagerChipValue1 : config.wagerChipValue2;
+  let output = '';
+  let limit = currentBetLimit();
+  let config = wwApp.config;
+  let wagerChipValue = (wagerNum == 1) ? config.wagerChipValue1 : config.wagerChipValue2;
 
   if (wagerChipValue > 0)
     output += wagerChipValue + ' ';
@@ -146,14 +152,18 @@ function updateWagerSelects() {
 }
 
 function currentBetLimit() {
+  let config = wwApp.config;
+
   if (config.numRounds === null)
     return config.betLimit;
   else
-    return (round == config.numRounds) ? config.lastRoundBetLimit : config.betLimit;
+    return (wwApp.gameState.round == config.numRounds) ?
+    config.lastRoundBetLimit
+    : config.betLimit;
 }
 
 function confirmGuesses() {
-  betting = true;
+  wwApp.gameState.betting = true;
   updatePlayerList();
 }
 
@@ -164,9 +174,10 @@ function loadOptions() {
   document.getElementById("overlay").style.display = "block";
   document.getElementById("options").style.display = "block";
 
-  // Select rule set
-  var selector = document.getElementById("ruleSet");
+  let config = wwApp.config;
 
+  // Select rule set
+  let selector = document.getElementById("ruleSet");
   switch (config.id) {
   default:
   case ruleSets.standard:
@@ -198,8 +209,8 @@ function loadOptions() {
   document.getElementById("wagerVal2").value = config.wagerChipValue2;
   document.getElementById("startingCash").value = config.startingCash;
 
-  var limitBets = document.getElementById("limitBets");
-  var limitBetsLastRound = document.getElementById("limitBetsLastRound");
+  let limitBets = document.getElementById("limitBets");
+  let limitBetsLastRound = document.getElementById("limitBetsLastRound");
   if (config.betLimit !== null) {
     limitBets.checked = true;
     document.getElementById("maxBet").value = config.betLimit;
@@ -224,23 +235,23 @@ function loadOptions() {
 }
 
 function updateOptions() {
-  var selector = document.getElementById("ruleSet");
-  var limitRounds = document.getElementById("limitRounds");
-  var limitScore = document.getElementById("limitScore");
-  var numRounds = document.getElementById("numRounds");
-  var winningScore = document.getElementById("winningScore");
-  var wagerVal1 = document.getElementById("wagerVal1");
-  var wagerVal2 = document.getElementById("wagerVal2");
-  var startingCash = document.getElementById("startingCash");
-  var limitBets = document.getElementById("limitBets");
-  var limitBetsLastRound = document.getElementById("limitBetsLastRound");
-  var maxBet = document.getElementById("maxBet");
-  var maxBetLastRound = document.getElementById("maxBetLastRound");
-  var correctAnswerBonus = document.getElementById("correctAnswerBonus");
-  var exactAnswerBonus = document.getElementById("exactAnswerBonus");
-  var centerPayout = document.getElementById("centerPayout");
-  var endPayout = document.getElementById("endPayout");
-  var elvisPayout = document.getElementById("elvisPayout");
+  let selector = document.getElementById("ruleSet");
+  let limitRounds = document.getElementById("limitRounds");
+  let limitScore = document.getElementById("limitScore");
+  let numRounds = document.getElementById("numRounds");
+  let winningScore = document.getElementById("winningScore");
+  let wagerVal1 = document.getElementById("wagerVal1");
+  let wagerVal2 = document.getElementById("wagerVal2");
+  let startingCash = document.getElementById("startingCash");
+  let limitBets = document.getElementById("limitBets");
+  let limitBetsLastRound = document.getElementById("limitBetsLastRound");
+  let maxBet = document.getElementById("maxBet");
+  let maxBetLastRound = document.getElementById("maxBetLastRound");
+  let correctAnswerBonus = document.getElementById("correctAnswerBonus");
+  let exactAnswerBonus = document.getElementById("exactAnswerBonus");
+  let centerPayout = document.getElementById("centerPayout");
+  let endPayout = document.getElementById("endPayout");
+  let elvisPayout = document.getElementById("elvisPayout");
 
   switch (selector.value) {
   default:
@@ -331,8 +342,8 @@ function applyOptions() {
   document.getElementById("options").style.display = "none";
 
   // Get rule set
-  var selector = document.getElementById("ruleSet");
-
+  let selector = document.getElementById("ruleSet");
+  let config = wwApp.config;
   switch (selector.value) {
   default:
   case "secondEd":
@@ -352,8 +363,8 @@ function applyOptions() {
     break;
   }
 
-  var limitRounds = document.getElementById("limitRounds");
-  var limitScore = document.getElementById("limitScore");
+  let limitRounds = document.getElementById("limitRounds");
+  let limitScore = document.getElementById("limitScore");
   if (limitRounds.checked) {
     config.numRounds = document.getElementById("numRounds").value;
     config.winningScore = null;
@@ -366,8 +377,8 @@ function applyOptions() {
   config.wagerChipValue2 = document.getElementById("wagerVal2").value;
   config.startingCash = document.getElementById("startingCash").value;
 
-  var limitBets = document.getElementById("limitBets");
-  var limitBetsLastRound = document.getElementById("limitBetsLastRound");
+  let limitBets = document.getElementById("limitBets");
+  let limitBetsLastRound = document.getElementById("limitBetsLastRound");
   if (limitBets.checked)
     config.betLimit = document.getElementById("maxBet").value;
   else
