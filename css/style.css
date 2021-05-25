@@ -73,13 +73,23 @@ a {
   overflow: auto;
 
   border: 1px solid black;
-  background-color: white;
+  border-radius: 8px;
+  background-color: var(--main-color);
+}
+
+.modal-title {
+  color: white;
+  font-family: 'Roboto Slab', serif;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
 }
 
 .modal-content {
   max-height: 256px;
   overflow: auto;
 
+  background-color: white;
   border: 1px solid gray;
   padding: 16px;
   margin: 16px 0;
