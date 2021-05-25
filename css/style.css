@@ -27,15 +27,19 @@ h1 {
   color: var(--main-color);
 }
 
+.heading {
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-size: 48px;
+  color: var(--main-color);
+  width: 256px;
+  margin: 32px auto 0 auto;
+  text-align: center;
+}
+
 a {
   text-decoration: none;
   color: var(--main-color);
   font-weight: bold;
-}
-
-a:hover,
-a:focus {
-  text-decoration: underline;
 }
 
 .numInput {
@@ -116,6 +120,27 @@ a:focus {
   position: relative;
   top: 1px;
   left: 1px;
+}
+
+#message {
+  font-family: 'Roboto Slab', serif;
+  font-size: 36px;
+  color: var(--main-color);
+  text-align: center;
+  font-variant-caps: small-caps;
+}
+
+.game-icon {
+  font-size: 36px;
+  color: var(--main-color);
+  border: 1px solid var(--main-color);
+  border-radius: 50%;
+  margin: 0 16px;
+}
+
+.game-icon:hover {
+  background-color: var(--shade1);
+  color: white;
 }
 
 /* .okay { */

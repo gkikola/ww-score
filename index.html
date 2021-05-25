@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Yanone+Kaffeesatz:wght@600&display=swap"
           rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons"
+          rel="stylesheet">
     <!-- End Google Fonts -->
 
     <link href="css/style.css" type="text/css" rel="stylesheet" />
@@ -16,7 +18,7 @@
   </head>
   <body onload="newGame()">
     <h1>Wits & Wagers</h1>
-    <p class="subtitle">Score Keeper</p>
+    <div class="subtitle">Score Keeper</div>
 
     <div id="main-buttons">
       <button class="main-button" type="button" onclick="confirmNewGame()">New Game</button>
@@ -24,8 +26,15 @@
       <button class="main-button" type="button" onclick="loadAbout()">About</button>
     </div>
 
-    <div id="message"></div>
+    <div id="message">Waiting on Players...</div>
     <div id="board"></div>
+
+    <div class="heading">
+      Players
+      <a href="#" class="game-icon material-icons" onclick="addPlayer()">
+        add
+      </a>
+    </div>
     <div id="playerList"></div>
 
     <div id="overlay" class="modal-overlay"></div>
