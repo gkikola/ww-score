@@ -22,8 +22,8 @@
 
     <div id="main-buttons">
       <button class="main-button" type="button" onclick="confirmNewGame()">New Game</button>
-      <button class="main-button" type="button" onclick="loadOptions()">Options</button>
-      <button class="main-button" type="button" onclick="loadAbout()">About</button>
+      <button class="main-button" type="button" onclick="loadDialog('options')">Options</button>
+      <button class="main-button" type="button" onclick="loadDialog('about')">About</button>
     </div>
 
     <div id="message">Waiting on Players...</div>
@@ -31,7 +31,7 @@
 
     <div class="heading">
       Players
-      <a href="#" class="game-icon material-icons" onclick="addPlayer()">
+      <a href="#" class="game-icon material-icons" onclick="loadDialog('add-player')">
         add
       </a>
     </div>
@@ -39,20 +39,35 @@
 
     <div id="overlay" class="modal-overlay"></div>
 
+    <!-- Begin Add Player dialog box -->
+    <div class="modal" id="add-player">
+      <div class="modal-title">Add Player</div>
+      <div class="modal-content">
+        <label for="player-name">Player name:</label>
+        <input type="text" id="player-name" />
+      </div>
+      <button type="button" class="main-button" onclick="applyDialog()">Apply</button>
+      <button type="button" class="main-button" onclick="cancelDialog()">Cancel</button>
+    </div>
+    <!-- End Add Player dialog box -->
+
     <!-- Begin About dialog box -->
     <div class="modal" id="about">
-      <strong>About</strong>
+      <div class="modal-title">About</div>
       <div class="modal-content">
-        Copyright &copy; 2021 <a href="https://www.gregkikola.com/">Greg Kikola</a>.
-        License: MIT
+        <p>
+          Copyright &copy; 2021
+          <a href="https://www.gregkikola.com/" target="_blank">Greg Kikola</a>.
+          License: MIT.
+        </p>
       </div>
-      <button type="button" onclick="closeAbout()">Okay</button>
+      <button type="button" class="main-button" onclick="cancelDialog()">Okay</button>
     </div>
     <!-- End About dialog box -->
 
     <!-- Begin Options dialog box -->
     <div class="modal" id="options">
-      <strong>Options</strong>
+      <div class="modal-title">Options</div>
       <div class="modal-content">
         <div class="option">
           <label for="ruleSet">Game rules:</label>
@@ -138,8 +153,8 @@
                  onchange="customizeOptions()" />
         </div>
       </div>
-      <button type="button" onclick="applyOptions()">Apply</button>
-      <button type="button" onclick="cancelOptions()">Cancel</button>
+      <button type="button" class="main-button" onclick="applyDialog()">Apply</button>
+      <button type="button" class="main-button" onclick="cancelDialog()">Cancel</button>
     </div>
     <!-- End Options dialog box -->
 

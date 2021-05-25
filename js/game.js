@@ -22,6 +22,9 @@ var wwApp = {
     endPayout: 5, // The maximum payout multiplier for player answers
     elvisPayout: 6 // Elvis's payout multiplier
   },
+  appState: {
+    curDialog: null
+  },
   gameState: {
     players: [],
     maxPlayerId: 0,
@@ -45,10 +48,17 @@ function setStatusMessage(msg) {
   document.getElementById("message").innerHTML = '<h3>' + msg + '</h3>';
 }
 
-function addPlayer() {
+function addPlayer(name) {
+  if (name === null)
+    return false;
+
+  name = name.trim();
+  if (name.length === 0)
+    return false;
+
   let player = {
     id: ++wwApp.gameState.maxPlayerId,
-    name: 'Player ' + (wwApp.gameState.players.length + 1),
+    name: name,
     cash: wwApp.config.startingCash,
     guess: null,
     bet1Amount: null,
@@ -57,15 +67,10 @@ function addPlayer() {
     bet2Guess: null
   };
 
-  let name = window.prompt('Enter player name', player.name);
+  wwApp.gameState.players.push(player);
+  updatePlayerList();
 
-  if (name !== null) {
-    if (name.length > 0)
-      player.name = name;
-
-    wwApp.gameState.players.push(player);
-    updatePlayerList();
-  }
+  return true;
 }
 
 function removePlayer(id) {
@@ -224,6 +229,52 @@ function confirmGuesses() {
 }
 
 function confirmBets() {
+}
+
+function loadDialog(id) {
+  document.getElementById('overlay').style.display = 'block';
+  document.getElementById(id).style.display = 'block';
+  wwApp.appState.curDialog = id;
+
+  switch (id) {
+  case 'add-player':
+    let name = 'Player ' + (wwApp.gameState.maxPlayerId + 1);
+    let nameBox = document.getElementById('player-name');
+    nameBox.value = name;
+    nameBox.select();
+    break;
+  case 'options':
+    loadOptions();
+    break;
+  default:
+    break;
+  }
+}
+
+function applyDialog() {
+  let id = wwApp.appState.curDialog;
+
+  switch (id) {
+  case 'add-player':
+    if (!addPlayer(document.getElementById('player-name').value))
+      return false;
+    break;
+  case 'options':
+    applyOptions();
+    break;
+  default:
+    break;
+  }
+
+  cancelDialog(id);
+  return true;
+}
+
+function cancelDialog() {
+  let id = wwApp.appState.curDialog;
+  wwApp.appState.curDialog = null;
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById(id).style.display = 'none';
 }
 
 function loadOptions() {
