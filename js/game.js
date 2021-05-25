@@ -103,7 +103,7 @@ function updatePlayerList() {
       output += '<td><input type="number" class="guess" value="';
       if (player.guess !== null)
         output += player.guess;
-      output += '" /></td>'
+      output += '" id="player' + player.id + 'guess" /></td>'
     }
     output += '</tr>';
   }
@@ -149,6 +149,48 @@ function generateWagerInputs(playerId, wagerNum) {
 }
 
 function updateWagerSelects() {
+  let players = wwApp.gameState.players;
+  players.sort((p1,p2) => p1.guess - p2.guess); // Sort by guess
+
+  let guesses = new Map();
+  for (let player of players) {
+    let guess = player.guess;
+    if (guesses.has(guess))
+      guesses.get(guess).push(player.id);
+    else
+      guesses.set(guess, [player.id]);
+  }
+
+  let output = '<option value="elvis">All guesses too high (Elvis)</option>';
+  for (let [guess, idList] of guesses) {
+    output += '<option value="guess' + guess + '">';
+    output += guess + ' (';
+
+    for (let i = 0; i < idList.length; i++) {
+      if (i > 0)
+        output += ', ';
+
+      if (i < 3) {
+        let playerIndex = players.findIndex((player) => player.id === idList[i]);
+        output += players[playerIndex].name;
+      } else {
+        output += '...';
+        break;
+      }
+    }
+
+    output += ')</option>';
+  }
+
+  for (let player of players) {
+    let selectNamePrefix = 'player' + player.id + 'Wager';
+    let selectNameSuffix = 'Guess';
+    let selector1 = document.getElementById(selectNamePrefix + 1 + selectNameSuffix);
+    let selector2 = document.getElementById(selectNamePrefix + 2 + selectNameSuffix);
+
+    selector1.innerHTML = output;
+    selector2.innerHTML = output;
+  }
 }
 
 function currentBetLimit() {
@@ -163,8 +205,22 @@ function currentBetLimit() {
 }
 
 function confirmGuesses() {
+  for (let player of wwApp.gameState.players) {
+    let guess = document.getElementById('player' + player.id + 'guess').value;
+
+    guess = parseInt(guess, 10);
+
+    if (!Number.isFinite(guess)) {
+      alert(player.name + ' has not entered a guess!');
+      return;
+    }
+
+    player.guess = guess;
+  }
+
   wwApp.gameState.betting = true;
   updatePlayerList();
+  updateWagerSelects();
 }
 
 function confirmBets() {
