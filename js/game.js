@@ -23,7 +23,10 @@ var wwApp = {
     elvisPayout: 6 // Elvis's payout multiplier
   },
   appState: {
-    curDialog: null
+    dialog: {
+      id: null,
+      playerId: null
+    }
   },
   gameState: {
     players: [],
@@ -89,15 +92,6 @@ function removePlayer(id) {
   updatePlayerList();
 }
 
-function confirmRemovePlayer(id) {
-  let player = getPlayer(id);
-  document.getElementById('remove-player-name').innerHTML = player.name;
-  document.getElementById('yes-remove-player').onclick = function() {
-    removePlayer(id); cancelDialog();
-  }
-  loadDialog('remove-player');
-}
-
 function updatePlayerList() {
   let output = '';
 
@@ -112,7 +106,9 @@ function updatePlayerList() {
     output += '<div class="player-name">' + player.name;
     output += '<span class="player-controls">';
     output += '<a href="#" class="game-icon material-icons" ';
-    output += 'onclick="confirmRemovePlayer(' + player.id + ')">delete</a>';
+    output += 'onclick="loadDialog(\'edit-player\', ' + player.id + ')">edit</a>'
+    output += '<a href="#" class="game-icon material-icons" ';
+    output += 'onclick="loadDialog(\'remove-player\', ' + player.id + ')">delete</a>';
     output += '</span></div>';
     output += '<div class="player-cash">$' + player.cash + '</div>';
     output += '</div>';
@@ -226,10 +222,15 @@ function confirmGuesses() {
 function confirmBets() {
 }
 
-function loadDialog(id) {
+function loadDialog(id, playerId = null) {
   document.getElementById('overlay').style.display = 'block';
   document.getElementById(id).style.display = 'block';
-  wwApp.appState.curDialog = id;
+  wwApp.appState.dialog.id = id;
+  wwApp.appState.dialog.playerId = playerId;
+
+  let player = null;
+  if (playerId !== null)
+    player = getPlayer(playerId);
 
   switch (id) {
   case 'add-player':
@@ -237,6 +238,15 @@ function loadDialog(id) {
     let nameBox = document.getElementById('player-name');
     nameBox.value = name;
     nameBox.select();
+    break;
+  case 'edit-player':
+    let nameChangeBox = document.getElementById('new-player-name');
+    nameChangeBox.value = player.name;
+    nameChangeBox.select();
+    document.getElementById('player-cash-override').value = player.cash;
+    break;
+  case 'remove-player':
+    document.getElementById('remove-player-name').innerHTML = player.name;
     break;
   case 'options':
     loadOptions();
@@ -247,12 +257,28 @@ function loadDialog(id) {
 }
 
 function applyDialog() {
-  let id = wwApp.appState.curDialog;
+  let id = wwApp.appState.dialog.id;
+  let playerId = wwApp.appState.dialog.playerId;
 
   switch (id) {
   case 'add-player':
     if (!addPlayer(document.getElementById('player-name').value))
       return false;
+    break;
+  case 'edit-player':
+    let player = getPlayer(playerId);
+    player.name = document.getElementById('new-player-name').value;
+
+    let cashOverride = document.getElementById('player-cash-override').value;
+    let newCash = Number.parseInt(cashOverride, 10);
+
+    if (Number.isFinite(newCash))
+      player.cash = newCash;
+
+    updatePlayerList();
+    break;
+  case 'remove-player':
+    removePlayer(playerId);
     break;
   case 'options':
     applyOptions();
@@ -266,8 +292,9 @@ function applyDialog() {
 }
 
 function cancelDialog() {
-  let id = wwApp.appState.curDialog;
-  wwApp.appState.curDialog = null;
+  let id = wwApp.appState.dialog.id;
+  wwApp.appState.dialog.id = null;
+  wwApp.appState.dialog.playerId = null;
   document.getElementById('overlay').style.display = 'none';
   document.getElementById(id).style.display = 'none';
 }

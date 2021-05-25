@@ -43,13 +43,33 @@
     <div class="modal" id="add-player">
       <div class="modal-title">Add Player</div>
       <div class="modal-content">
-        <label for="player-name">Player name:</label>
-        <input type="text" id="player-name" />
+        <div class="option">
+          <label for="player-name">Player name:</label>
+          <input type="text" id="player-name" />
+        </div>
       </div>
       <button type="button" class="main-button" onclick="applyDialog()">Apply</button>
       <button type="button" class="main-button" onclick="cancelDialog()">Cancel</button>
     </div>
     <!-- End Add Player dialog box -->
+
+    <!-- Begin Edit Player dialog box -->
+    <div class="modal" id="edit-player">
+      <div class="modal-title">Edit Player</div>
+      <div class="modal-content">
+        <div class="option">
+          <label for="new-player-name">Player name:</label>
+          <input type="text" id="new-player-name" />
+        </div>
+        <div class="option">
+          <label for="player-cash-override">Override number of chips:</label>
+          <input type="number" class="num-input" id="player-cash-override" />
+        </div>
+      </div>
+      <button type="button" class="main-button" onclick="applyDialog()">Apply</button>
+      <button type="button" class="main-button" onclick="cancelDialog()">Cancel</button>
+    </div>
+    <!-- End Edit Player dialog box -->
 
     <!-- Begin Remove Player dialog box -->
     <div class="modal" id="remove-player">
@@ -98,70 +118,70 @@
               <input type="radio" id="limitRounds" name="endCondition"
                      onchange="customizeOptions()" />
               <label for="limitRounds">after
-              <input type="number" id="numRounds" class="numInput"
+              <input type="number" id="numRounds" class="num-input"
                      onchange="customizeOptions()" /> rounds</label>
             </div>
             <div>
               <input type="radio" id="limitScore" name="endCondition"
                      onchange="customizeOptions()" />
               <label for="limitScore">when someone scores
-              <input type="number" id="winningScore" class="numInput"
+              <input type="number" id="winningScore" class="num-input"
                      onchange="customizeOptions()" /> points</label>
             </div>
           </fieldset>
         </div>
         <div class="option">
           <label for="wagerVal1">First wager value:</label>
-          <input type="number" id="wagerVal1" class="numInput"
+          <input type="number" id="wagerVal1" class="num-input"
                  onchange="customizeOptions()" />
         </div>
         <div class="option">
           <label for="wagerVal2">Second wager value:</label>
-          <input type="number" id="wagerVal2" class="numInput"
+          <input type="number" id="wagerVal2" class="num-input"
                  onchange="customizeOptions()" />
         </div>
         <div class="option">
           <label for="startingCash">Starting chips:</label>
-          <input type="number" id="startingCash" class="numInput"
+          <input type="number" id="startingCash" class="num-input"
                  onchange="customizeOptions()" />
         </div>
         <div class="option">
           <input type="checkbox" id="limitBets"
                  onchange="customizeOptions()" />
           <label for="limitBets">Limit bets to
-          <input type="number" id="maxBet" class="numInput"
+          <input type="number" id="maxBet" class="num-input"
                  onchange="customizeOptions()" /> chips until the last round</label>
         </div>
         <div class="option">
           <input type="checkbox" id="limitBetsLastRound"
                  onchange="customizeOptions()" />
           <label for="limitBetsLastRound">Limit bets in the last round to
-          <input type="number" id="maxBetLastRound" class = "numInput"
+          <input type="number" id="maxBetLastRound" class = "num-input"
                  onchange="customizeOptions()" /> chips</label>
         </div>
         <div class="option">
           <label for="correctAnswerBonus">Correct answer bonus:</label>
-          <input type="number" id="correctAnswerBonus" class="numInput"
+          <input type="number" id="correctAnswerBonus" class="num-input"
                  onchange="customizeOptions()" />
         </div>
         <div class="option">
           <label for="exactAnswerBonus">Additional bonus for exact answers:</label>
-          <input type="number" id="exactAnswerBonus" class="numInput"
+          <input type="number" id="exactAnswerBonus" class="num-input"
                  onchange="customizeOptions()" />
         </div>
         <div class="option">
           <label for="centerPayout">Payout multiplier for middle answer:</label>
-          <input type="number" id="centerPayout" class="numInput"
+          <input type="number" id="centerPayout" class="num-input"
                  onchange="customizeOptions()" />
         </div>
         <div class="option">
           <label for="endPayout">Maximum payout multiplier for player answers:</label>
-          <input type="number" id="endPayout" class="numInput"
+          <input type="number" id="endPayout" class="num-input"
                  onchange="customizeOptions()" />
         </div>
         <div class="option">
           <label for="elvisPayout">Payout multiplier for minimum slot (Elvis):</label>
-          <input type="number" id="elvisPayout" class="numInput"
+          <input type="number" id="elvisPayout" class="num-input"
                  onchange="customizeOptions()" />
         </div>
       </div>
