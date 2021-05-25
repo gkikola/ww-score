@@ -73,15 +73,29 @@ function addPlayer(name) {
   return true;
 }
 
-function removePlayer(id) {
-  let players = wwApp.gameState.players;
-  let i = players.findIndex((player) => player.id == id);
-  let name = players[i].name;
+function getPlayer(id) {
+  let index = getPlayerIndex(id);
 
-  if (i >= 0 && window.confirm("Are you sure you want to remove player '" + name + "'?")) {
-    players.splice(i, 1);
-    updatePlayerList();
+  return wwApp.gameState.players[index];
+}
+
+function getPlayerIndex(id) {
+  return wwApp.gameState.players.findIndex(player => player.id === id);
+}
+
+function removePlayer(id) {
+  let playerIndex = getPlayerIndex(id);
+  wwApp.gameState.players.splice(playerIndex, 1);
+  updatePlayerList();
+}
+
+function confirmRemovePlayer(id) {
+  let player = getPlayer(id);
+  document.getElementById('remove-player-name').innerHTML = player.name;
+  document.getElementById('yes-remove-player').onclick = function() {
+    removePlayer(id); cancelDialog();
   }
+  loadDialog('remove-player');
 }
 
 function updatePlayerList() {
@@ -98,7 +112,7 @@ function updatePlayerList() {
     output += '<div class="player-name">' + player.name;
     output += '<span class="player-controls">';
     output += '<a href="#" class="game-icon material-icons" ';
-    output += 'onclick="loadDialog(\'remove-player\')">delete</a>';
+    output += 'onclick="confirmRemovePlayer(' + player.id + ')">delete</a>';
     output += '</span></div>';
     output += '<div class="player-cash">$' + player.cash + '</div>';
     output += '</div>';
