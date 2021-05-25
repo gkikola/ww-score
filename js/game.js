@@ -63,6 +63,7 @@ function addPlayer(name) {
     id: ++wwApp.gameState.maxPlayerId,
     name: name,
     cash: wwApp.config.startingCash,
+    rank: 1,
     guess: null,
     bet1Amount: null,
     bet1Guess: null,
@@ -74,6 +75,40 @@ function addPlayer(name) {
   updatePlayerList();
 
   return true;
+}
+
+function updateRankings() {
+  let players = [...wwApp.gameState.players];
+
+  // Sort player list by cash, descending
+  players.sort((p1, p2) => p2.cash - p1.cash);
+
+  let prevCash = null;
+  let curRank = 1;
+  for (let i = 0; i < players.length; i++) {
+    if (players[i].cash !== prevCash)
+      curRank = i + 1;
+
+    getPlayer(players[i].id).rank = curRank;
+    prevCash = players[i].cash;
+  }
+}
+
+function rankToString(rank) {
+  switch (rank % 10) {
+  default:
+  case 0:
+    return rank + 'th';
+  case 1:
+    return (rank % 100 === 11) ? rank + 'th' : rank + 'st';
+  case 2:
+    return (rank % 100 === 12) ? rank + 'th' : rank + 'nd';
+  case 3:
+    return (rank % 100 === 13) ? rank + 'th' : rank + 'rd';
+  case 4: case 5: case 6:
+  case 7: case 8: case 9:
+    return rank + 'th';
+  }
 }
 
 function getPlayer(id) {
@@ -95,11 +130,13 @@ function removePlayer(id) {
 function updatePlayerList() {
   let output = '';
 
+  updateRankings();
+
   // Copy player list
   let players = [...wwApp.gameState.players];
 
-  // Sort player list by cash, descending
-  players.sort((p1, p2) => p2.cash - p1.cash);
+  // Sort player list by rank
+  players.sort((p1, p2) => p1.rank - p2.rank);
 
   for (let player of players) {
     output += '<div class="player">';
@@ -110,8 +147,10 @@ function updatePlayerList() {
     output += '<a href="#" class="game-icon material-icons" ';
     output += 'onclick="loadDialog(\'remove-player\', ' + player.id + ')">delete</a>';
     output += '</span></div>';
-    output += '<div class="player-cash">$' + player.cash + '</div>';
-    output += '</div>';
+    output += '<div class="player-stats">';
+    output += '<span class="player-rank">' + rankToString(player.rank) + '</span>';
+    output += '<span class="player-cash">$' + player.cash + '</span>';
+    output += '</div></div>';
   }
 
   document.getElementById("player-list").innerHTML = output;

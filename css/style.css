@@ -4,6 +4,7 @@
   --border-color: black;
   --secondary-shade: #2c2cff;
   --cash-color: lightgreen;
+  --rank-color: yellow;
 }
 
 body {
@@ -152,9 +153,20 @@ a {
 }
 
 .player-name {
-  font-size: 48px;
+  font-size: 44px;
   font-weight: bold;
   font-variant-caps: small-caps;
+}
+
+.player-stats {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.player-rank {
+  font-size: 36px;
+  font-weight: bold;
+  color: var(--rank-color);
 }
 
 .player-cash {
