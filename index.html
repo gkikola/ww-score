@@ -3,17 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Yanone+Kaffeesatz:wght@600&display=swap"
+          rel="stylesheet">
+    <!-- End Google Fonts -->
+
     <link href="css/style.css" type="text/css" rel="stylesheet" />
     <title>Wits & Wagers Score Keeper</title>
     <script src="js/game.js"></script>
   </head>
   <body onload="newGame()">
-    <h1>Wits & Wagers Score Keeper</h1>
+    <h1>Wits & Wagers</h1>
+    <p class="subtitle">Score Keeper</p>
 
-    <div class="grouping">
-      <button type="button" onclick="confirmNewGame()">New Game</button>
-      <button type="button" onclick="loadOptions()">Options</button>
-      <button type="button" onclick="loadAbout()">About</button>
+    <div id="main-buttons">
+      <button class="main-button" type="button" onclick="confirmNewGame()">New Game</button>
+      <button class="main-button" type="button" onclick="loadOptions()">Options</button>
+      <button class="main-button" type="button" onclick="loadAbout()">About</button>
     </div>
 
     <div id="message"></div>
