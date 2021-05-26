@@ -106,7 +106,7 @@ a {
 #main-buttons {
   display: flex;
   justify-content: space-between;
-  max-width: 315px;
+  max-width: 425px;
 
   margin: 16px auto;
   padding: 8px;

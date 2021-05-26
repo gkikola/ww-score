@@ -23,6 +23,7 @@
     <div id="main-buttons">
       <button class="main-button" type="button" onclick="loadDialog('new-game')">New Game</button>
       <button class="main-button" type="button" onclick="loadDialog('options')">Options</button>
+      <button class="main-button" type="button" onclick="loadDialog('help')">Help</button>
       <button class="main-button" type="button" onclick="loadDialog('about')">About</button>
     </div>
 
@@ -121,6 +122,19 @@
       </form>
     </div>
     <!-- End About dialog box -->
+
+    <!-- Begin Help dialog box -->
+    <div class="modal" id="help">
+      <div class="modal-title">Help</div>
+      <form action="#">
+        <div class="modal-content">
+          <p>Help text will go here</p>
+        </div>
+        <button type="submit" class="main-button" onclick="cancelDialog()"
+                id="help-okay">Okay</button>
+      </form>
+    </div>
+    <!-- End Help dialog box -->
 
     <!-- Begin Options dialog box -->
     <div class="modal" id="options">

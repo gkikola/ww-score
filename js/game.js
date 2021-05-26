@@ -198,6 +198,9 @@ function loadDialog(id, playerId = null) {
   case 'about':
     document.getElementById('about-okay').focus();
     break;
+  case 'help':
+    document.getElementById('help-okay').focus();
+    break;
   default:
     break;
   }
