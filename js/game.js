@@ -156,78 +156,6 @@ function updatePlayerList() {
   document.getElementById("player-list").innerHTML = output;
 }
 
-function generateWagerInputs(playerId, wagerNum) {
-  let output = '';
-  let limit = currentBetLimit();
-  let config = wwApp.config;
-  let wagerChipValue = (wagerNum == 1) ? config.wagerChipValue1 : config.wagerChipValue2;
-
-  if (wagerChipValue > 0)
-    output += wagerChipValue + ' ';
-  if (limit === null || limit > 0) {
-    if (wagerChipValue > 0)
-      output += '+ ';
-    output += '<input type="number" class="numInput" id="player'
-      + playerId + 'Wager' + wagerNum + 'Amount" /> chip(s) on ';
-  } else {
-    output += 'chip';
-    if (wagerChipValue != 1)
-      output += 's';
-    output += ' on ';
-  }
-
-  output += '<select id="player' + playerId + 'Wager' + wagerNum + 'Guess" ';
-  output += 'onchange="updateBets()">';
-  output += '</select>';
-
-  return output;
-}
-
-function updateWagerSelects() {
-  let players = wwApp.gameState.players;
-  players.sort((p1,p2) => p1.guess - p2.guess); // Sort by guess
-
-  let guesses = new Map();
-  for (let player of players) {
-    let guess = player.guess;
-    if (guesses.has(guess))
-      guesses.get(guess).push(player.id);
-    else
-      guesses.set(guess, [player.id]);
-  }
-
-  let output = '<option value="elvis">All guesses too high (Elvis)</option>';
-  for (let [guess, idList] of guesses) {
-    output += '<option value="guess' + guess + '">';
-    output += guess + ' (';
-
-    for (let i = 0; i < idList.length; i++) {
-      if (i > 0)
-        output += ', ';
-
-      if (i < 3) {
-        let playerIndex = players.findIndex((player) => player.id === idList[i]);
-        output += players[playerIndex].name;
-      } else {
-        output += '...';
-        break;
-      }
-    }
-
-    output += ')</option>';
-  }
-
-  for (let player of players) {
-    let selectNamePrefix = 'player' + player.id + 'Wager';
-    let selectNameSuffix = 'Guess';
-    let selector1 = document.getElementById(selectNamePrefix + 1 + selectNameSuffix);
-    let selector2 = document.getElementById(selectNamePrefix + 2 + selectNameSuffix);
-
-    selector1.innerHTML = output;
-    selector2.innerHTML = output;
-  }
-}
-
 function currentBetLimit() {
   let config = wwApp.config;
 
@@ -237,28 +165,6 @@ function currentBetLimit() {
     return (wwApp.gameState.round == config.numRounds) ?
     config.lastRoundBetLimit
     : config.betLimit;
-}
-
-function confirmGuesses() {
-  for (let player of wwApp.gameState.players) {
-    let guess = document.getElementById('player' + player.id + 'guess').value;
-
-    guess = parseInt(guess, 10);
-
-    if (!Number.isFinite(guess)) {
-      alert(player.name + ' has not entered a guess!');
-      return;
-    }
-
-    player.guess = guess;
-  }
-
-  wwApp.gameState.betting = true;
-  updatePlayerList();
-  updateWagerSelects();
-}
-
-function confirmBets() {
 }
 
 function loadDialog(id, playerId = null) {
@@ -565,19 +471,4 @@ function applyOptions() {
   config.centerPayout = document.getElementById("centerPayout").value;
   config.endPayout = document.getElementById("endPayout").value;
   config.elvisPayout = document.getElementById("elvisPayout").value;
-}
-
-function cancelOptions() {
-  document.getElementById("overlay").style.display = "none";
-  document.getElementById("options").style.display = "none";
-}
-
-function loadAbout() {
-  document.getElementById("overlay").style.display = "block";
-  document.getElementById("about").style.display = "block";
-}
-
-function closeAbout() {
-  document.getElementById("overlay").style.display = "none";
-  document.getElementById("about").style.display = "none";
 }
