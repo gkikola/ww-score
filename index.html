@@ -21,7 +21,7 @@
     <div class="subtitle">Score Keeper</div>
 
     <div id="main-buttons">
-      <button class="main-button" type="button" onclick="confirmNewGame()">New Game</button>
+      <button class="main-button" type="button" onclick="loadDialog('new-game')">New Game</button>
       <button class="main-button" type="button" onclick="loadDialog('options')">Options</button>
       <button class="main-button" type="button" onclick="loadDialog('about')">About</button>
     </div>
@@ -39,6 +39,20 @@
     <div id="player-list"></div>
 
     <div id="overlay" class="modal-overlay"></div>
+
+    <!-- Begin New Game dialog box -->
+    <div class="modal" id="new-game">
+      <div class="modal-title">New Game</div>
+      <form action="#">
+        <div class="modal-content">
+          Are you sure you want to end the current game?
+        </div>
+        <button type="submit" class="main-button" onclick="applyDialog()"
+                id="yes-new-game">Yes</button>
+        <button type="button" class="main-button" onclick="cancelDialog()">No</button>
+      </form>
+    </div>
+    <!-- End New Game dialog box -->
 
     <!-- Begin Add Player dialog box -->
     <div class="modal" id="add-player">

@@ -42,11 +42,6 @@ function newGame() {
   updatePlayerList();
 }
 
-function confirmNewGame() {
-  if (window.confirm("Are you sure you want to end the current game?"))
-    newGame();
-}
-
 function setStatusMessage(msg) {
   document.getElementById("message").innerHTML = '<h3>' + msg + '</h3>';
 }
@@ -178,6 +173,9 @@ function loadDialog(id, playerId = null) {
     player = getPlayer(playerId);
 
   switch (id) {
+  case 'new-game':
+    document.getElementById('yes-new-game').focus();
+    break;
   case 'add-player':
     let name = 'Player ' + (wwApp.gameState.maxPlayerId + 1);
     let nameBox = document.getElementById('player-name');
@@ -210,6 +208,9 @@ function applyDialog() {
   let playerId = wwApp.appState.dialog.playerId;
 
   switch (id) {
+  case 'new-game':
+    newGame();
+    break;
   case 'add-player':
     if (!addPlayer(document.getElementById('player-name').value))
       return false;
