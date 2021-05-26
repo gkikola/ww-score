@@ -90,13 +90,41 @@ a {
 }
 
 .modal-content {
-  max-height: 256px;
+  max-height: 400px;
   overflow: auto;
 
   background-color: var(--bg-color);
   border: 1px solid var(--border-color);
   padding: 16px;
   margin: 16px 0;
+}
+
+@media (max-height: 600px) {
+  .modal {
+    max-height: 500px;
+  }
+
+  .modal-title {
+    font-size: 24px;
+  }
+
+  .modal-content {
+    max-height: 350px;
+  }
+}
+
+@media (max-height: 500px) {
+  .modal {
+    max-height: 300px;
+  }
+
+  .modal-title {
+    font-size: 18px;
+  }
+
+  .modal-content {
+    max-height: 150px;
+  }
 }
 
 .option {
