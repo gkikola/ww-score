@@ -37,13 +37,57 @@ var wwApp = {
 }
 
 function newGame() {
-  wwApp.gameState.round = 1;
-  wwApp.gameState.betting = false;
+  let state = wwApp.gameState;
+
+  for (let player of state.players) {
+    player.cash = wwApp.config.startingCash;
+    player.rank = 1;
+  }
+
+  state.round = 0;
+  newRound();
   updatePlayerList();
 }
 
+function newRound() {
+  let state = wwApp.gameState;
+  state.round++;
+  state.betting = false;
+
+  for (let player of state.players) {
+    player.guess = null;
+    player.bet1Amount = null;
+    player.bet1Guess = null;
+    player.bet2Amount = null;
+    player.bet2Guess = null;
+  }
+
+  updateStatus();
+}
+
+function updateStatus() {
+  let state = wwApp.gameState;
+  let iconAction = null;
+
+  if (state.players.length < 1)
+    setStatusMessage('Waiting for Players to Join...');
+  else if (!state.betting) {
+    setStatusMessage('Make Your Guesses');
+    iconAction = 'doGuessing()';
+  } else {
+    setStatusMessage('Place Your Bets');
+    iconAction = 'doBetting()';
+  }
+
+  if (iconAction !== null) {
+    document.getElementById("message-icon").innerHTML
+      = '<a href="#" class="game-icon material-icons" onclick="'
+      + iconAction + '">launch</a>';
+  }
+}
+
 function setStatusMessage(msg) {
-  document.getElementById("message").innerHTML = '<h3>' + msg + '</h3>';
+  document.getElementById("message").innerHTML = msg;
 }
 
 function addPlayer(name) {
@@ -67,6 +111,7 @@ function addPlayer(name) {
   };
 
   wwApp.gameState.players.push(player);
+  updateStatus();
   updatePlayerList();
 
   return true;
@@ -119,6 +164,7 @@ function getPlayerIndex(id) {
 function removePlayer(id) {
   let playerIndex = getPlayerIndex(id);
   wwApp.gameState.players.splice(playerIndex, 1);
+  updateStatus();
   updatePlayerList();
 }
 

@@ -185,16 +185,22 @@ a {
   margin-top: 32px;
 }
 
+#status {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 8px;
+}
+
 #message {
   font-family: 'Roboto Slab', serif;
   font-size: 36px;
   color: var(--main-color);
-  text-align: center;
   font-variant-caps: small-caps;
 }
 
 .game-icon {
-  font-size: 36px;
+  font-size: 32px;
   color: var(--main-color);
   background-color: var(--bg-color);
   border: 1px solid var(--main-color);
