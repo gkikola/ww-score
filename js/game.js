@@ -286,9 +286,13 @@ function loadDialog(id, playerId = null) {
     break;
   case 'remove-player':
     document.getElementById('remove-player-name').innerHTML = player.name;
+    document.getElementById('yes-remove-player').focus();
     break;
   case 'options':
     loadOptions();
+    break;
+  case 'about':
+    document.getElementById('about-okay').focus();
     break;
   default:
     break;
