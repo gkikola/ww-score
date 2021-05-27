@@ -35,7 +35,8 @@ var wwApp = {
     betting: false,
     firstBet: true,
     remainingGuessers: [],
-    remainingBetters: []
+    remainingBetters: [],
+    guessList: []
   }
 }
 
@@ -286,8 +287,22 @@ function startBetting() {
   let players = [...wwApp.gameState.players];
   players.sort((p1, p2) => p2.rank - p1.rank);
 
-  // Build betting list
-  players.forEach(player => wwApp.gameState.remainingBetters.push(player.id));
+  // Build guess and betting lists
+  let state = wwApp.gameState;
+  state.remainingBetters = [];
+  state.guessList = [];
+  for (let player of players) {
+    state.remainingBetters.push(player.id);
+
+    let guessIndex = state.guessList.findIndex(g => g.value === player.guess);
+    if (guessIndex < 0)
+      state.guessList.push({ value: player.guess, players: [player.name] });
+    else
+      state.guessList[guessIndex].players.push(player.name);
+  }
+
+  // Sort list of guesses from low to high
+  state.guessList.sort((g1, g2) => g1.value - g2.value);
 
   updateBetDialog();
 }
@@ -328,6 +343,21 @@ function updateBetDialog() {
 }
 
 function updateWagerBoard() {
+  let output = '<div class="board">';
+  output += '</div>';
+}
+
+function placeBet() {
+  let remaining = wwApp.gameState.remainingBetters;
+  let player = getPlayer(remaining[0]);
+
+  if (remaining.length === 0) {
+    applyDialog();
+    wwApp.gameState.betting = false;
+    updateStatus();
+  } else {
+    updateBetDialog();
+  }
 }
 
 function loadDialog(id, playerId = null) {
