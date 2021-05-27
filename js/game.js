@@ -36,6 +36,22 @@ var wwApp = {
   }
 }
 
+document.addEventListener('keyup', handleKeyPress);
+
+function handleKeyPress(e) {
+  const key = e.key;
+
+  if (key === 'Enter') {
+    if (wwApp.appState.dialog.id !== null)
+      applyDialog();
+  }
+}
+
+// Prevent form submission
+function submitForm(e) {
+  e.preventDefault();
+}
+
 function newGame() {
   let state = wwApp.gameState;
 
@@ -66,8 +82,15 @@ function newRound() {
 }
 
 function updateStatus() {
+  let config = wwApp.config;
   let state = wwApp.gameState;
   let iconAction = null;
+
+  roundElem = document.getElementById("round");
+  if (config.numRounds !== null)
+    roundElem.innerHTML = 'Round ' + state.round + ' of ' + config.numRounds;
+  else
+    roundElem.innerHTML = 'Round ' + state.round;
 
   if (state.players.length < 1)
     setStatusMessage('Waiting for Players to Join...');
@@ -81,7 +104,7 @@ function updateStatus() {
 
   if (iconAction !== null) {
     document.getElementById("message-icon").innerHTML
-      = '<a href="#" class="game-icon material-icons" onclick="'
+      = '<a class="game-icon material-icons" onclick="'
       + iconAction + '">launch</a>';
   }
 }
@@ -183,9 +206,9 @@ function updatePlayerList() {
     output += '<div class="player">';
     output += '<div class="player-name">' + player.name;
     output += '<span class="player-controls">';
-    output += '<a href="#" class="game-icon material-icons" ';
+    output += '<a class="game-icon material-icons" ';
     output += 'onclick="loadDialog(\'edit-player\', ' + player.id + ')">edit</a>'
-    output += '<a href="#" class="game-icon material-icons" ';
+    output += '<a class="game-icon material-icons" ';
     output += 'onclick="loadDialog(\'remove-player\', ' + player.id + ')">delete</a>';
     output += '</span></div>';
     output += '<div class="player-stats">';
@@ -521,4 +544,6 @@ function applyOptions() {
   config.centerPayout = document.getElementById("centerPayout").value;
   config.endPayout = document.getElementById("endPayout").value;
   config.elvisPayout = document.getElementById("elvisPayout").value;
+
+  updateStatus();
 }

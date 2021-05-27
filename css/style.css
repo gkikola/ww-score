@@ -44,6 +44,11 @@ a {
   text-decoration: none;
   color: var(--main-color);
   font-weight: bold;
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
 }
 
 .num-input {
