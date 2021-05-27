@@ -6,6 +6,12 @@ const ruleSets = {
   custom: 5 // Custom rules
 };
 
+const phases = {
+  guessing: 1, // Beginning of round, players are making guesses
+  betting: 2, // Players are placing bets
+  answer: 3 // End of round, answer revealed and points added up
+}
+
 var wwApp = {
   config: {
     id: ruleSets.standard, // Preset game rules
@@ -32,7 +38,7 @@ var wwApp = {
     players: [],
     maxPlayerId: 0,
     round: 1,
-    betting: false,
+    phase: phases.guessing,
     firstBet: true,
     remainingGuessers: [],
     remainingBetters: [],
@@ -72,7 +78,7 @@ function newGame() {
 function newRound() {
   let state = wwApp.gameState;
   state.round++;
-  state.betting = false;
+  state.phase = phases.guessing;
 
   for (let player of state.players) {
     player.guess = null;
@@ -98,12 +104,15 @@ function updateStatus() {
 
   if (state.players.length < 1)
     setStatusMessage('Waiting for Players to Join...');
-  else if (!state.betting) {
+  else if (state.phase === phases.guessing) {
     setStatusMessage('Make Your Guesses');
     iconAction = 'loadDialog(\'do-guessing\')';
-  } else {
+  } else if (state.phase === phases.betting) {
     setStatusMessage('Place Your Bets');
     iconAction = 'loadDialog(\'do-betting\')';
+  } else {
+    setStatusMessage('Reveal the Answer');
+    iconAction = 'loadDialog(\'do-answer\')';
   }
 
   if (iconAction !== null) {
@@ -275,7 +284,7 @@ function makeGuess() {
 
   if (remaining.length === 0) {
     applyDialog();
-    wwApp.gameState.betting = true;
+    wwApp.gameState.phase = phases.betting;
     updateStatus();
   } else {
     updateGuessDialog();
@@ -353,7 +362,7 @@ function placeBet() {
 
   if (remaining.length === 0) {
     applyDialog();
-    wwApp.gameState.betting = false;
+    wwApp.gameState.phase = phases.answer;
     updateStatus();
   } else {
     updateBetDialog();
