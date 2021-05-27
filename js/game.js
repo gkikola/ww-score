@@ -32,7 +32,9 @@ var wwApp = {
     players: [],
     maxPlayerId: 0,
     round: 1,
-    betting: false
+    betting: false,
+    remainingGuessers: [],
+    remainingBetters: []
   }
 }
 
@@ -96,10 +98,10 @@ function updateStatus() {
     setStatusMessage('Waiting for Players to Join...');
   else if (!state.betting) {
     setStatusMessage('Make Your Guesses');
-    iconAction = 'doGuessing()';
+    iconAction = 'loadDialog(\'do-guessing\')';
   } else {
     setStatusMessage('Place Your Bets');
-    iconAction = 'doBetting()';
+    iconAction = 'loadDialog(\'do-betting\')';
   }
 
   if (iconAction !== null) {
@@ -231,6 +233,64 @@ function currentBetLimit() {
     : config.betLimit;
 }
 
+function startGuessing() {
+  let state = wwApp.gameState;
+  state.remainingGuessers = [];
+
+  // Sort players by descending rank
+  let players = [...wwApp.gameState.players];
+  players.sort((p1, p2) => p2.rank - p1.rank);
+
+  // Build guessing list
+  players.forEach(player => state.remainingGuessers.push(player.id));
+
+  updateGuessDialog();
+}
+
+function updateGuessDialog() {
+  let remaining = wwApp.gameState.remainingGuessers;
+  let player = getPlayer(remaining[0]);
+
+  let guessInput = document.getElementById('guess');
+  if (player.guess === null)
+    guessInput.value = '';
+  else
+    guessInput.value = player.guess;
+
+  document.getElementById('guess-dialog-turn-indicator').innerHTML = player.name + '\'s Turn';
+  document.getElementById('guess-dialog-player-name').innerHTML = player.name;
+}
+
+function makeGuess() {
+  let remaining = wwApp.gameState.remainingGuessers;
+  let player = getPlayer(remaining[0]);
+
+  let guess = Number.parseInt(document.getElementById('guess').value);
+  if (Number.isFinite(guess)) {
+    player.guess = guess;
+    remaining.shift();
+  }
+
+  if (remaining.length === 0) {
+    applyDialog();
+    wwApp.gameState.betting = true;
+    updateStatus();
+  } else {
+    updateGuessDialog();
+  }
+}
+
+function startBetting() {
+  document.getElementById('finish-betting').disabled = true;
+
+  // Sort players by descending rank
+  let players = [...wwApp.gameState.players];
+  players.sort((p1, p2) => p2.rank - p1.rank);
+
+  // Build betting list
+  players.forEach(player => state.remainingBetters.push(player.id));
+}
+
 function loadDialog(id, playerId = null) {
   document.getElementById('overlay').style.display = 'block';
   document.getElementById(id).style.display = 'block';
@@ -260,6 +320,12 @@ function loadDialog(id, playerId = null) {
   case 'remove-player':
     document.getElementById('remove-player-name').innerHTML = player.name;
     document.getElementById('yes-remove-player').focus();
+    break;
+  case 'do-guessing':
+    startGuessing();
+    break;
+  case 'do-betting':
+    startBetting();
     break;
   case 'options':
     loadOptions();

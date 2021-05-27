@@ -109,6 +109,36 @@
     </div>
     <!-- End RemovePlayer dialog box -->
 
+    <!-- Begin Guess dialog box -->
+    <div class="modal" id="do-guessing">
+      <div class="modal-title">Enter Guesses</div>
+      <form onsubmit="submitForm(event)">
+        <div class="modal-content">
+          <div class="turn-indicator" id="guess-dialog-turn-indicator"></div>
+          <label for="guess"><span id="guess-dialog-player-name"></span>,
+            enter your guess:
+          </label>
+          <input type="number" class="guess-input" id="guess" />
+          <button type="button" onclick="makeGuess()">Make Guess</button>
+        </div>
+        <button type="button" class="main-button" onclick="cancelDialog()">Cancel</button>
+      </form>
+    </div>
+    <!-- End Guess dialog box -->
+
+    <!-- Begin Betting dialog box -->
+    <div class="modal" id="do-betting">
+      <div class="modal-title">Enter Bets</div>
+      <form onsubmit="submitForm(event)">
+        <div class="modal-content">
+        </div>
+        <button type="button" class="main-button" onclick="applyDialog()"
+                id="finish-betting">Finish</button>
+        <button type="button" class="main-button" onclick="cancelDialog()">Cancel</button>
+      </form>
+    </div>
+    <!-- End Betting dialog box -->
+
     <!-- Begin About dialog box -->
     <div class="modal" id="about">
       <div class="modal-title">About</div>

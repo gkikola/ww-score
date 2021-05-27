@@ -55,6 +55,18 @@ button {
   width: 48px;
 }
 
+.guess-input {
+  width: 128px;
+}
+
+.turn-indicator {
+  font-family: 'Roboto Slab', serif;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
 .modal-overlay {
   display: none;
   position: fixed;
@@ -167,6 +179,11 @@ button {
   position: relative;
   top: 1px;
   left: 1px;
+}
+
+.main-button:disabled {
+  color: darkgray;
+  background-color: lightgray;
 }
 
 #player-list {
