@@ -290,7 +290,7 @@ function startBetting() {
   // Build guess and betting lists
   let state = wwApp.gameState;
   state.remainingBetters = [];
-  state.guessList = [];
+  state.guessList = [{value: null, players: ['(Elvis)']}];
   for (let player of players) {
     state.remainingBetters.push(player.id);
 
