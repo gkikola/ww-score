@@ -311,13 +311,14 @@ function updateBetDialog() {
   document.getElementById('bet-dialog-bet-points').innerHTML = pointDisplay;
 
   let betLimit = currentBetLimit();
+  if (betLimit === null || player.cash < betLimit)
+    betLimit = player.cash;
+
   let additionalBetDisplay = '';
   if (betLimit !== 0) {
     additionalBetDisplay = '<label for="additional-bet-amount">';
     additionalBetDisplay += 'Additional number of chips to bet';
-
-    if (betLimit !== null)
-      additionalBetDisplay += ' (max ' + betLimit + ')';
+    additionalBetDisplay += ' (max ' + betLimit + ')';
 
     additionalBetDisplay += ':</label> <input type="text" id="additional-bet-amount" />';
   }
