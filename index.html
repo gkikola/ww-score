@@ -126,6 +126,22 @@
     </div>
     <!-- End Guess dialog box -->
 
+    <!-- Begin Confirm Guess dialog box -->
+    <div class="modal" id="confirm-guesses">
+      <div class="modal-title">Confirm Guesses</div>
+      <form onsubmit="submitForm(event)">
+        <div class="modal-content">
+          <div id="list-of-guesses"></div>
+          <div>
+            Are these guesses correct?
+          </div>
+        </div>
+        <button type="button" onclick="applyDialog()">Yes</button>
+        <button type="button" onclick="cancelGuesses()">No</button>
+      </form>
+    </div>
+    <!-- End Confirm Guess dialog box -->
+
     <!-- Begin Betting dialog box -->
     <div class="modal" id="do-betting">
       <div class="modal-title">Enter Bets</div>
@@ -149,6 +165,22 @@
       </form>
     </div>
     <!-- End Betting dialog box -->
+
+    <!-- Begin Confirm Bet dialog box -->
+    <div class="modal" id="confirm-guesses">
+      <div class="modal-title">Confirm Bets</div>
+      <form onsubmit="submitForm(event)">
+        <div class="modal-content">
+          <div class="list-of-bets"></div>
+          <div>
+            Are these bets correct?
+          </div>
+        </div>
+        <button type="button" onclick="applyDialog()">Yes</button>
+        <button type="button" onclick="cancelBets()">No</button>
+      </form>
+    </div>
+    <!-- End Confirm Bet dialog box -->
 
     <!-- Begin Answer dialog box -->
     <div class="modal" id="do-answer">

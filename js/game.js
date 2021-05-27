@@ -8,8 +8,10 @@ const ruleSets = {
 
 const phases = {
   guessing: 1, // Beginning of round, players are making guesses
-  betting: 2, // Players are placing bets
-  answer: 3 // End of round, answer revealed and points added up
+  confirmingGuesses: 2, // Players confirming entered guesses
+  betting: 3, // Players are placing bets
+  confirmingBets: 4, // Players confirming entered bets
+  revealingAnswer: 5 // End of round, answer revealed and points added up
 }
 
 var wwApp = {
@@ -104,15 +106,30 @@ function updateStatus() {
 
   if (state.players.length < 1)
     setStatusMessage('Waiting for Players to Join...');
-  else if (state.phase === phases.guessing) {
-    setStatusMessage('Make Your Guesses');
-    iconAction = 'loadDialog(\'do-guessing\')';
-  } else if (state.phase === phases.betting) {
-    setStatusMessage('Place Your Bets');
-    iconAction = 'loadDialog(\'do-betting\')';
-  } else {
-    setStatusMessage('Reveal the Answer');
-    iconAction = 'loadDialog(\'do-answer\')';
+  else {
+    switch (state.phase) {
+    default:
+    case phases.guessing:
+      setStatusMessage('Make Your Guesses');
+      iconAction = 'loadDialog(\'do-guessing\')';
+      break;
+    case phases.confirmingGuesses:
+      setStatusMessage('Confirm Your Guesses');
+      iconAction = 'loadDialog(\'confirm-guesses\')';
+      break;
+    case phases.betting:
+      setStatusMessage('Place Your Bets');
+      iconAction = 'loadDialog(\'do-betting\')';
+      break;
+    case phases.confirmingBets:
+      setStatusMessage('Confirm Your Bets');
+      iconAction = 'loadDialog(\'confirm-bets\')';
+      break;
+    case phases.revealingAnswer:
+      setStatusMessage('Reveal the Answer');
+      iconAction = 'loadDialog(\'do-answer\')';
+      break;
+    }
   }
 
   if (iconAction !== null) {
@@ -284,11 +301,32 @@ function makeGuess() {
 
   if (remaining.length === 0) {
     applyDialog();
-    wwApp.gameState.phase = phases.betting;
+    wwApp.gameState.phase = phases.confirmingGuesses;
     updateStatus();
   } else {
     updateGuessDialog();
   }
+}
+
+function confirmGuesses() {
+  // Sort players by descending rank
+  let players = [...wwApp.gameState.players];
+  players.sort((p1, p2) => p2.rank - p1.rank);
+
+  // List player guesses
+  let output = '<table><tr><th>Player</th><th>Guess</th></tr>';
+  for (let player of players) {
+    output += '<tr><td>' + player.name + '</td><td>';
+    output += player.guess + '</td></tr>';
+  }
+  output += '</table>';
+  document.getElementById('list-of-guesses').innerHTML = output;
+}
+
+function cancelGuesses() {
+  wwApp.gameState.phase = phases.guessing;
+  cancelDialog();
+  updateStatus();
 }
 
 function startBetting() {
@@ -362,11 +400,17 @@ function placeBet() {
 
   if (remaining.length === 0) {
     applyDialog();
-    wwApp.gameState.phase = phases.answer;
+    wwApp.gameState.phase = phases.confirmingBets;
     updateStatus();
   } else {
     updateBetDialog();
   }
+}
+
+function cancelBets() {
+  wwApp.gameState.phase = phases.betting;
+  cancelDialog();
+  updateStatus();
 }
 
 function loadDialog(id, playerId = null) {
@@ -402,8 +446,16 @@ function loadDialog(id, playerId = null) {
   case 'do-guessing':
     startGuessing();
     break;
+  case 'confirm-guesses':
+    confirmGuesses();
+    break;
   case 'do-betting':
     startBetting();
+    break;
+  case 'confirm-bets':
+    confirmBets();
+    break;
+  case 'do-answer':
     break;
   case 'options':
     loadOptions();
@@ -445,6 +497,14 @@ function applyDialog() {
     break;
   case 'remove-player':
     removePlayer(playerId);
+    break;
+  case 'confirm-guesses':
+    wwApp.gameState.phase = phases.betting;
+    updateStatus();
+    break;
+  case 'confirm-bets':
+    wwApp.gameState.phase = phases.revealingAnswer;
+    updateStatus();
     break;
   case 'options':
     applyOptions();

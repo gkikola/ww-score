@@ -47,6 +47,29 @@ a {
   cursor: pointer;
 }
 
+table {
+  border-collapse: collapse;
+  border-style: none;
+  margin: 16px auto;
+}
+
+th {
+  font-weight: bold;
+  border-bottom: 1px solid black;
+}
+
+td {
+  padding: 1px 8px;
+}
+
+tr:nth-child(2n+2) {
+  background-color: white;
+}
+
+tr:nth-child(2n+3) {
+  background-color: lightgray;
+}
+
 button {
   cursor: pointer;
 }
