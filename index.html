@@ -131,6 +131,17 @@
       <div class="modal-title">Enter Bets</div>
       <form onsubmit="submitForm(event)">
         <div class="modal-content">
+          <div class="turn-indicator" id="bet-dialog-turn-indicator"></div>
+          <div>
+            <span id="bet-dialog-player-name"></span>, place your
+            <span id="bet-dialog-bet-number"></span>
+            wager<span id="bet-dialog-bet-points"></span>:
+          </div>
+          <div class="wager-board"></div>
+          <div>
+            <span id="bet-dialog-additional-bet-amount"></span>
+            <button type="button" onclick="placebet()">Place Bet</button>
+          </div>
         </div>
         <button type="button" class="main-button" onclick="applyDialog()"
                 id="finish-betting">Finish</button>

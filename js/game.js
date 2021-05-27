@@ -33,6 +33,7 @@ var wwApp = {
     maxPlayerId: 0,
     round: 1,
     betting: false,
+    firstBet: true,
     remainingGuessers: [],
     remainingBetters: []
   }
@@ -281,14 +282,51 @@ function makeGuess() {
 }
 
 function startBetting() {
-  document.getElementById('finish-betting').disabled = true;
-
   // Sort players by descending rank
   let players = [...wwApp.gameState.players];
   players.sort((p1, p2) => p2.rank - p1.rank);
 
   // Build betting list
-  players.forEach(player => state.remainingBetters.push(player.id));
+  players.forEach(player => wwApp.gameState.remainingBetters.push(player.id));
+
+  updateBetDialog();
+}
+
+function updateBetDialog() {
+  let remaining = wwApp.gameState.remainingBetters;
+  let player = getPlayer(remaining[0]);
+  let firstBet = wwApp.gameState.firstBet;
+
+  document.getElementById('bet-dialog-turn-indicator').innerHTML = player.name + '\'s Turn';
+  document.getElementById('bet-dialog-player-name').innerHTML = player.name;
+
+  let pointValue = (firstBet) ? wwApp.config.wagerChipValue1 : wwApp.config.wagerChipValue2;
+  let pointDisplay = '';
+  if (pointValue !== 0) {
+    pointDisplay = ' (worth ' + pointValue + ' point';
+    if (pointValue !== 1)
+      pointDisplay += 's';
+    pointDisplay += ')'
+  }
+  document.getElementById('bet-dialog-bet-points').innerHTML = pointDisplay;
+
+  let betLimit = currentBetLimit();
+  let additionalBetDisplay = '';
+  if (betLimit !== 0) {
+    additionalBetDisplay = '<label for="additional-bet-amount">';
+    additionalBetDisplay += 'Additional number of chips to bet';
+
+    if (betLimit !== null)
+      additionalBetDisplay += ' (max ' + betLimit + ')';
+
+    additionalBetDisplay += ':</label> <input type="text" id="additional-bet-amount" />';
+  }
+  document.getElementById('bet-dialog-additional-bet-amount').innerHTML = additionalBetDisplay;
+
+  updateWagerBoard();
+}
+
+function updateWagerBoard() {
 }
 
 function loadDialog(id, playerId = null) {
@@ -583,33 +621,33 @@ function applyOptions() {
   let limitRounds = document.getElementById("limitRounds");
   let limitScore = document.getElementById("limitScore");
   if (limitRounds.checked) {
-    config.numRounds = document.getElementById("numRounds").value;
+    config.numRounds = Number.parseInt(document.getElementById("numRounds").value);
     config.winningScore = null;
   } else {
     config.numRounds = null;
-    config.winningScore = document.getElementById("winningScore").value;
+    config.winningScore = Number.parseInt(document.getElementById("winningScore").value);
   }
 
-  config.wagerChipValue1 = document.getElementById("wagerVal1").value;
-  config.wagerChipValue2 = document.getElementById("wagerVal2").value;
-  config.startingCash = document.getElementById("startingCash").value;
+  config.wagerChipValue1 = Number.parseInt(document.getElementById("wagerVal1").value);
+  config.wagerChipValue2 = Number.parseInt(document.getElementById("wagerVal2").value);
+  config.startingCash = Number.parseInt(document.getElementById("startingCash").value);
 
   let limitBets = document.getElementById("limitBets");
   let limitBetsLastRound = document.getElementById("limitBetsLastRound");
   if (limitBets.checked)
-    config.betLimit = document.getElementById("maxBet").value;
+    config.betLimit = Number.parseInt(document.getElementById("maxBet").value);
   else
     config.betLimit = null;
   if (limitBetsLastRound.checked)
-    config.lastRoundBetLimit = document.getElementById("maxBetLastRound").value;
+    config.lastRoundBetLimit = Number.parseInt(document.getElementById("maxBetLastRound").value);
   else
     config.lastRoundBetLimit = null;
 
-  config.correctAnswerBonus = document.getElementById("correctAnswerBonus").value;
-  config.exactAnswerBonus = document.getElementById("exactAnswerBonus").value;
-  config.centerPayout = document.getElementById("centerPayout").value;
-  config.endPayout = document.getElementById("endPayout").value;
-  config.elvisPayout = document.getElementById("elvisPayout").value;
+  config.correctAnswerBonus = Number.parseInt(document.getElementById("correctAnswerBonus").value);
+  config.exactAnswerBonus = Number.parseInt(document.getElementById("exactAnswerBonus").value);
+  config.centerPayout = Number.parseInt(document.getElementById("centerPayout").value);
+  config.endPayout = Number.parseInt(document.getElementById("endPayout").value);
+  config.elvisPayout = Number.parseInt(document.getElementById("elvisPayout").value);
 
   updateStatus();
 }
