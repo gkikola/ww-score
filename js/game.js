@@ -53,6 +53,7 @@ document.addEventListener('keyup', handleKeyPress);
 function handleKeyPress(e) {
   const key = e.key;
 
+  // Enter should apply the changes in the dialog box
   if (key === 'Enter') {
     if (wwApp.appState.dialog.id !== null)
       applyDialog();
@@ -302,7 +303,7 @@ function makeGuess() {
   }
 
   if (remaining.length === 0) {
-    applyDialog();
+    cancelDialog();
     wwApp.gameState.phase = phases.confirmingGuesses;
     updateStatus();
   } else {
@@ -401,7 +402,7 @@ function placeBet() {
   let player = getPlayer(remaining[0]);
 
   if (remaining.length === 0) {
-    applyDialog();
+    cancelDialog();
     wwApp.gameState.phase = phases.confirmingBets;
     updateStatus();
   } else {
@@ -500,10 +501,16 @@ function applyDialog() {
   case 'remove-player':
     removePlayer(playerId);
     break;
+  case 'do-guessing':
+    makeGuess();
+    return false;
   case 'confirm-guesses':
     wwApp.gameState.phase = phases.betting;
     updateStatus();
     break;
+  case 'do-betting':
+    placeBet();
+    return false;
   case 'confirm-bets':
     wwApp.gameState.phase = phases.revealingAnswer;
     updateStatus();
