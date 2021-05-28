@@ -271,6 +271,14 @@ button {
   padding: 8px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
+
+  cursor: pointer;
+}
+
+.selected-guess {
+  background-color: var(--secondary-shade);
+  border: 5px solid red;
+  padding: 4px;
 }
 
 .guess-payout {
@@ -289,6 +297,10 @@ button {
   color: var(--main-color);
   background-color: var(--bg-color);
   text-align: center;
+}
+
+.selected-guess .guess-value {
+  color: red;
 }
 
 .guess-player {

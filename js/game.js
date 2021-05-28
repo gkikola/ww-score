@@ -44,7 +44,8 @@ var wwApp = {
     firstBet: true,
     remainingGuessers: [],
     remainingBetters: [],
-    guessList: []
+    guessList: [],
+    selectedGuess: null
   }
 }
 
@@ -341,6 +342,7 @@ function startBetting() {
   let state = wwApp.gameState;
   state.remainingBetters = [];
   state.guessList = [];
+  state.selectedGuess = null;
   for (let player of players) {
     state.remainingBetters.push(player.id);
 
@@ -436,23 +438,35 @@ function updateBetDialog() {
 
 function updateWagerBoard() {
   let output = '';
+  const guessList = wwApp.gameState.guessList;
+  const selected = wwApp.gameState.selectedGuess;
 
-  for (let guess of wwApp.gameState.guessList) {
-    output += '<div class="guess">';
-    output += '<span class="guess-payout">Pays ' + guess.payout + ' to 1</span>';
+  for (let i = 0; i < guessList.length; i++) {
+    output += '<div class="guess';
+
+    if (selected === i)
+      output += ' selected-guess';
+
+    output += '" id="guess' + i + '" onclick="selectGuess(' + i + ')">';
+    output += '<span class="guess-payout">Pays ' + guessList[i].payout + ' to 1</span>';
     output += '<span class="guess-value">';
-    if (guess.value === null)
+    if (guessList[i].value === null)
       output += '-&infin;';
     else
-      output += guess.value;
+      output += guessList[i].value;
     output += '</span>';
-    for (let playerName of guess.players) {
+    for (let playerName of guessList[i].players) {
       output += '<span class="guess-player">' + playerName + '</span>';
     }
     output += '</div>';
   }
 
   document.getElementById('wager-board').innerHTML = output;
+}
+
+function selectGuess(index) {
+  wwApp.gameState.selectedGuess = index;
+  updateWagerBoard();
 }
 
 function placeBet() {
