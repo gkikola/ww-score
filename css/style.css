@@ -51,6 +51,7 @@ table {
   border-collapse: collapse;
   border-style: none;
   margin: 16px auto;
+  text-align: center;
 }
 
 th {
