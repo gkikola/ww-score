@@ -104,9 +104,9 @@ function updateStatus() {
   else
     roundElem.innerHTML = 'Round ' + state.round;
 
-  if (state.players.length < 1)
+  if (state.players.length < 1) {
     setStatusMessage('Waiting for Players to Join...');
-  else {
+  } else {
     switch (state.phase) {
     default:
     case phases.guessing:
@@ -132,10 +132,12 @@ function updateStatus() {
     }
   }
 
+  let icon = document.getElementById("message-icon");
   if (iconAction !== null) {
-    document.getElementById("message-icon").innerHTML
-      = '<a class="game-icon material-icons" onclick="'
+    icon.innerHTML = '<a class="game-icon material-icons" onclick="'
       + iconAction + '">launch</a>';
+  } else {
+    icon.innerHTML = '';
   }
 }
 
