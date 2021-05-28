@@ -343,6 +343,7 @@ function startBetting() {
   state.remainingBetters = [];
   state.guessList = [];
   state.selectedGuess = null;
+  state.firstBet = true;
   for (let player of players) {
     state.remainingBetters.push(player.id);
 
@@ -408,6 +409,7 @@ function updateBetDialog() {
 
   document.getElementById('bet-dialog-turn-indicator').innerHTML = player.name + '\'s Turn';
   document.getElementById('bet-dialog-player-name').innerHTML = player.name;
+  document.getElementById('bet-dialog-bet-number').innerHTML = (firstBet) ? 'first' : 'second';
 
   let pointValue = (firstBet) ? wwApp.config.wagerChipValue1 : wwApp.config.wagerChipValue2;
   let pointDisplay = '';
@@ -423,17 +425,20 @@ function updateBetDialog() {
   if (betLimit === null || player.cash < betLimit)
     betLimit = player.cash;
 
-  let additionalBetDisplay = '';
+  let betAmount = (firstBet) ? player.bet1Amount : player.bet2Amount;
+  let additionalBetElem = document.getElementById('bet-dialog-additional-bet-amount');
+  let betAmountInput = document.getElementById('additional-bet-amount');
+  betAmountInput.value = '';
   if (betLimit !== 0) {
-    additionalBetDisplay = '<label for="additional-bet-amount">';
-    additionalBetDisplay += 'Additional number of chips to bet';
-    additionalBetDisplay += ' (max ' + betLimit + ')';
-
-    additionalBetDisplay += ':</label> <input type="text" id="additional-bet-amount" />';
+    additionalBetElem.style.display = 'block';
+    if (betAmount !== null)
+      betAmountInput.value = betAmount;
+  } else {
+    additionalBetElem.style.display = 'none';
   }
-  document.getElementById('bet-dialog-additional-bet-amount').innerHTML = additionalBetDisplay;
 
-  updateWagerBoard();
+  let betGuess = (firstBet) ? player.bet1Guess : player.bet2Guess;
+  selectGuess(betGuess);
 }
 
 function updateWagerBoard() {
@@ -472,6 +477,26 @@ function selectGuess(index) {
 function placeBet() {
   let remaining = wwApp.gameState.remainingBetters;
   let player = getPlayer(remaining[0]);
+
+  let firstBet = wwApp.gameState.firstBet;
+  let selection = wwApp.gameState.selectedGuess;
+  let betAmount = Number.parseInt(document.getElementById('additional-bet-amount').value);
+
+  if (!Number.isFinite(betAmount))
+    betAmount = 0;
+
+  if (selection !== null) {
+    if (wwApp.gameState.firstBet) {
+      player.bet1Guess = selection;
+      player.bet1Amount = betAmount;
+      wwApp.gameState.firstBet = false;
+    } else {
+      player.bet2Guess = selection;
+      player.bet2Amount = betAmount;
+      remaining.shift();
+      wwApp.gameState.firstBet = true;
+    }
+  }
 
   if (remaining.length === 0) {
     cancelDialog();

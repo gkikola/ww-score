@@ -154,8 +154,12 @@
             wager<span id="bet-dialog-bet-points"></span>:
           </div>
           <div id="wager-board"></div>
-          <div>
-            <span id="bet-dialog-additional-bet-amount"></span>
+          <div id="bet-dialog-additional-bet-amount">
+            <label for="additional-bet-amount">
+              Additional number of chips to bet
+              (max <span id="bet-dialog-bet-limit"></span>):
+            </label>
+            <input type="text" id="additional-bet-amount" />
           </div>
         </div>
         <button type="button" class="main-button" onclick="placeBet()">Place Bet</button>
