@@ -340,13 +340,17 @@ function startBetting() {
   // Build guess and betting lists
   let state = wwApp.gameState;
   state.remainingBetters = [];
-  state.guessList = [{value: null, players: ['(Elvis)']}];
+  state.guessList = [];
   for (let player of players) {
     state.remainingBetters.push(player.id);
 
     let guessIndex = state.guessList.findIndex(g => g.value === player.guess);
     if (guessIndex < 0)
-      state.guessList.push({ value: player.guess, players: [player.name] });
+      state.guessList.push({
+        value: player.guess,
+        players: [player.name],
+        payout: 1
+      });
     else
       state.guessList[guessIndex].players.push(player.name);
   }
@@ -354,7 +358,45 @@ function startBetting() {
   // Sort list of guesses from low to high
   state.guessList.sort((g1, g2) => g1.value - g2.value);
 
+  // Add Elvis guess
+  state.guessList.unshift({value: null, players: ['(Elvis)']});
+
+  // Set payouts
+  calculatePayouts();
+
   updateBetDialog();
+}
+
+function calculatePayouts() {
+  let guessList = wwApp.gameState.guessList;
+
+  let payout = wwApp.config.centerPayout;
+  let maxPayout = wwApp.config.endPayout;
+
+  // Set Elvis's payout
+  guessList[0].payout = wwApp.config.elvisPayout;
+
+  // Set player guess payouts
+  let count = guessList.length;
+  if (count % 2 === 0) { // Even number of guesses (or odd excluding Elvis)
+    for (let i = 0; i < count / 2; i++) {
+      guessList[count / 2 - i].payout = payout;
+      guessList[count / 2 + i].payout = payout;
+
+      payout++;
+      if (payout > maxPayout)
+        payout = maxPayout;
+    }
+  } else { // Odd number of guesses (even number excluding Elvis)
+    for (let i = 0; i < (count - 1) / 2; i++) {
+      payout++;
+      if (payout > maxPayout)
+        payout = maxPayout;
+
+      guessList[(count - 1) / 2 - i].payout = payout;
+      guessList[(count - 1) / 2 + i + 1].payout = payout;
+    }
+  }
 }
 
 function updateBetDialog() {
@@ -393,8 +435,24 @@ function updateBetDialog() {
 }
 
 function updateWagerBoard() {
-  let output = '<div class="board">';
-  output += '</div>';
+  let output = '';
+
+  for (let guess of wwApp.gameState.guessList) {
+    output += '<div class="guess">';
+    output += '<span class="guess-payout">Pays ' + guess.payout + ' to 1</span>';
+    output += '<span class="guess-value">';
+    if (guess.value === null)
+      output += '-&infin;';
+    else
+      output += guess.value;
+    output += '</span>';
+    for (let playerName of guess.players) {
+      output += '<span class="guess-player">' + playerName + '</span>';
+    }
+    output += '</div>';
+  }
+
+  document.getElementById('wager-board').innerHTML = output;
 }
 
 function placeBet() {

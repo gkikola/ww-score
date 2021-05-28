@@ -250,6 +250,53 @@ button {
   color: var(--cash-color);
 }
 
+#wager-board {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  align-content: center;
+  margin: 8px;
+}
+
+.guess {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+
+  width: 100px;
+  color: var(--bg-color);
+  background-color: var(--main-color);
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.guess-payout {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  color: var(--cash-color);
+}
+
+.guess-value {
+  font-size: 24px;
+  font-weight: bold;
+
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  color: var(--main-color);
+  background-color: var(--bg-color);
+  text-align: center;
+}
+
+.guess-player {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
 #round-container {
   text-align: center;
   margin-top: 32px;
