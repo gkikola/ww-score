@@ -119,8 +119,8 @@
             enter your guess:
           </label>
           <input type="number" class="guess-input" id="guess" />
-          <button type="button" onclick="makeGuess()">Make Guess</button>
         </div>
+        <button type="button" class="main-button" onclick="makeGuess()">Make Guess</button>
         <button type="button" class="main-button" onclick="cancelDialog()">Cancel</button>
       </form>
     </div>
@@ -136,8 +136,8 @@
             Are these guesses correct?
           </div>
         </div>
-        <button type="button" onclick="applyDialog()">Yes</button>
-        <button type="button" onclick="cancelGuesses()">No</button>
+        <button type="button" class="main-button" onclick="applyDialog()">Yes</button>
+        <button type="button" class="main-button" onclick="cancelGuesses()">No</button>
       </form>
     </div>
     <!-- End Confirm Guess dialog box -->
@@ -176,8 +176,8 @@
             Are these bets correct?
           </div>
         </div>
-        <button type="button" onclick="applyDialog()">Yes</button>
-        <button type="button" onclick="cancelBets()">No</button>
+        <button type="button" class="main-button" onclick="applyDialog()">Yes</button>
+        <button type="button" class="main-button" onclick="cancelBets()">No</button>
       </form>
     </div>
     <!-- End Confirm Bet dialog box -->
@@ -188,8 +188,8 @@
       <form onsubmit="submitForm(event)">
         <div class="modal-content">
         </div>
-        <button type="button" onclick="applyDialog()">Finish</button>
-        <button type="button" onclick="cancelDialog()">Cancel</button>
+        <button type="button" class="main-button" onclick="applyDialog()">Finish</button>
+        <button type="button" class="main-button" onclick="cancelDialog()">Cancel</button>
       </form>
     </div>
     <!-- End Answer dialog box -->
