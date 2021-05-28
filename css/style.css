@@ -249,14 +249,20 @@ button {
   color: var(--cash-color);
 }
 
+#round-container {
+  text-align: center;
+  margin-top: 32px;
+}
+
 #round {
   font-family: font-family: 'Yanone Kaffeesatz', sans-serif;
   font-size: 24px;
   color: var(--main-color);
-  text-align: center;
   text-transform: uppercase;
-  text-decoration-line: underline overline;
-  margin-top: 32px;
+
+  display: inline-block;
+  border-top: 1px solid var(--main-color);
+  border-bottom: 1px solid var(--main-color);
 }
 
 #status {
