@@ -175,7 +175,7 @@ button {
 #main-buttons {
   display: flex;
   justify-content: space-between;
-  max-width: 425px;
+  max-width: 525px;
 
   margin: 16px auto;
   padding: 8px;
@@ -187,7 +187,7 @@ button {
 .main-button {
   background-color: var(--bg-color);
   color: var(--main-color);
-  width: 100px;
+  width: 125px;
   font-weight: bold;
   padding: 8px;
   border: 1px solid var(--border-color);
@@ -268,7 +268,7 @@ button {
 #status {
   display: flex;
   justify-content: center;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
 }
 
@@ -277,6 +277,7 @@ button {
   font-size: 36px;
   color: var(--main-color);
   font-variant-caps: small-caps;
+  text-align: center;
 }
 
 .game-icon {
