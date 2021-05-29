@@ -103,13 +103,30 @@ function newRound() {
   updateStatus();
 }
 
+function isGameOver() {
+  let state = wwApp.gameState;
+  let config = wwApp.config;
+
+  if (config.numRounds !== null && state.round >= config.numRounds)
+    return true;
+
+  if (config.winningScore !== null) {
+    let index = state.players.findIndex(p1 => p1.cash >= config.winningScore);
+
+    if (index >= 0)
+      return true;
+  }
+
+  return false;
+}
+
 function updateStatus() {
   let config = wwApp.config;
   let state = wwApp.gameState;
   let iconAction = null;
 
   roundElem = document.getElementById("round");
-  if (config.numRounds !== null)
+  if (config.numRounds !== null && state.round <= config.numRounds)
     roundElem.innerHTML = 'Round ' + state.round + ' of ' + config.numRounds;
   else
     roundElem.innerHTML = 'Round ' + state.round;
@@ -699,6 +716,48 @@ function showResults() {
   updatePlayerList();
 }
 
+function showVictory() {
+  let players = [...wwApp.gameState.players];
+  let winners = [];
+
+  for (let player of players) {
+    if (player.rank === 1)
+      winners.push(player.name);
+  }
+
+  players.sort((p1, p2) => p1.rank - p2.rank);
+
+  let heading = '';
+  if (winners.length === 1)
+    heading = winners[0] + ' is the winner! Congratulations!';
+  else {
+    heading = 'It\'s a tie! The winners are ';
+    for (let i = 0; i < winners.length; i++) {
+      heading += winners[i];
+      if (i < winners.length - 1)
+        heading += ', ';
+      if (i === winners.length - 2)
+        heading += 'and ';
+    }
+    heading += '. Congratulations!';
+  }
+
+  document.getElementById('victory-heading').innerHTML = heading;
+
+  let results = '<table><tr><th>Player</th><th>Rank</th><th>Cash</th></tr>';
+
+  for (let player of players) {
+    results += '<tr>';
+    results += '<td>' + player.name + '</td>';
+    results += '<td>' + rankToString(player.rank) + '</td>';
+    results += '<td class="positive-cash">$' + player.cash + '</td>';
+    results += '</tr>';
+  }
+  results += '</table>';
+
+  document.getElementById('victory-body').innerHTML = results;
+}
+
 function loadDialog(id, playerId = null) {
   document.getElementById('overlay').style.display = 'block';
   document.getElementById(id).style.display = 'block';
@@ -748,6 +807,9 @@ function loadDialog(id, playerId = null) {
     break;
   case 'results':
     showResults();
+    break;
+  case 'victory':
+    showVictory();
     break;
   case 'options':
     loadOptions();
@@ -808,7 +870,14 @@ function applyDialog() {
     revealAnswer();
     return false;
   case 'results':
-    newRound();
+    if (isGameOver()) {
+      cancelDialog(id);
+      loadDialog('victory');
+      newRound();
+      return false;
+    } else {
+      newRound();
+    }
     break;
   case 'options':
     applyOptions();

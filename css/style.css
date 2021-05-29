@@ -96,7 +96,7 @@ button {
   width: 128px;
 }
 
-.turn-indicator, #results-heading {
+.dialog-subheading {
   font-family: 'Roboto Slab', serif;
   font-size: 24px;
   font-weight: bold;

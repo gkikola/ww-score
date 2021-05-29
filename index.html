@@ -114,7 +114,7 @@
       <div class="modal-title">Enter Guesses</div>
       <form onsubmit="submitForm(event)">
         <div class="modal-content">
-          <div class="turn-indicator" id="guess-dialog-turn-indicator"></div>
+          <div class="dialog-subheading" id="guess-dialog-turn-indicator"></div>
           <label for="guess"><span id="guess-dialog-player-name"></span>,
             enter your guess:
           </label>
@@ -147,7 +147,7 @@
       <div class="modal-title">Enter Bets</div>
       <form onsubmit="submitForm(event)">
         <div class="modal-content">
-          <div class="turn-indicator" id="bet-dialog-turn-indicator"></div>
+          <div class="dialog-subheading" id="bet-dialog-turn-indicator"></div>
           <div>
             <span id="bet-dialog-player-name"></span>, place your
             <span id="bet-dialog-bet-number"></span>
@@ -205,13 +205,26 @@
       <div class="modal-title">Results</div>
       <form onsubmit="submitForm(event)">
         <div class="modal-content">
-          <div id="results-heading"></div>
+          <div class="dialog-subheading" id="results-heading"></div>
           <div id="results-body"></div>
         </div>
         <button type="button" class="main-button" onclick="applyDialog()">Okay</button>
       </form>
     </div>
     <!-- End Results dialog box -->
+
+    <!-- Begin Victory dialog box -->
+    <div class="modal" id="victory">
+      <div class="modal-title">Victory</div>
+      <form onsubmit="submitForm(event)">
+        <div class="modal-content">
+          <div class="dialog-subheading" id="victory-heading"></div>
+          <div id="victory-body"></div>
+        </div>
+        <button type="button" class="main-button" onclick="applyDialog()">Okay</button>
+      </form>
+    </div>
+    <!-- End Victory dialog box -->
 
     <!-- Begin About dialog box -->
     <div class="modal" id="about">
