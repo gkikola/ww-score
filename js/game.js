@@ -307,6 +307,7 @@ function makeGuess() {
     cancelDialog();
     wwApp.gameState.phase = phases.confirmingGuesses;
     updateStatus();
+    loadDialog('confirm-guesses');
   } else {
     updateGuessDialog();
   }
@@ -514,6 +515,7 @@ function placeBet() {
     cancelDialog();
     wwApp.gameState.phase = phases.confirmingBets;
     updateStatus();
+    loadDialog('confirm-bets');
   } else {
     updateBetDialog();
   }
