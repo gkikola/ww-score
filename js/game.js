@@ -425,6 +425,8 @@ function updateBetDialog() {
   if (betLimit === null || player.cash < betLimit)
     betLimit = player.cash;
 
+  document.getElementById('bet-dialog-bet-limit').innerHTML = betLimit;
+
   let betAmount = (firstBet) ? player.bet1Amount : player.bet2Amount;
   let additionalBetElem = document.getElementById('bet-dialog-additional-bet-amount');
   let betAmountInput = document.getElementById('additional-bet-amount');
@@ -485,6 +487,14 @@ function placeBet() {
   if (!Number.isFinite(betAmount))
     betAmount = 0;
 
+  let maxBet = currentBetLimit();
+
+  if (maxBet === null || maxBet > player.cash)
+    maxBet = player.cash;
+  if (betAmount > maxBet) {
+    alert('You can not bet more than $' + maxBet + '.');
+  }
+
   if (selection !== null) {
     if (wwApp.gameState.firstBet) {
       player.bet1Guess = selection;
@@ -496,6 +506,8 @@ function placeBet() {
       remaining.shift();
       wwApp.gameState.firstBet = true;
     }
+  } else {
+    alert('You must select a guess to bet on.');
   }
 
   if (remaining.length === 0) {
@@ -505,6 +517,40 @@ function placeBet() {
   } else {
     updateBetDialog();
   }
+}
+
+function confirmBets() {
+  // Sort players by descending rank
+  let players = [...wwApp.gameState.players];
+  players.sort((p1, p2) => p2.rank - p1.rank);
+
+  let limit = currentBetLimit();
+  let showAmounts = (limit !== 0);
+  let guessList = wwApp.gameState.guessList;
+
+  // List player bets
+  let output = '<table><tr><th>Player</th><th>First Bet</th>';
+  output += '<th>Second Bet</th></tr>';
+  for (let player of players) {
+    let value1 = guessList[player.bet1Guess].value;
+    if (value1 === null)
+      value1 = '-&infin;';
+    let value2 = guessList[player.bet2Guess].value;
+    if (value2 === null)
+      value2 = '-&infin;';
+
+    output += '<tr><td>' + player.name + '</td><td>';
+    output += value1;
+    if (showAmounts)
+      output += ' ($' + player.bet1Amount + ')';
+    output += '</td><td>';
+    output += value2;
+    if (showAmounts)
+      output += ' ($' + player.bet2Amount + ')';
+    output += '</td></tr>'
+  }
+  output += '</table>';
+  document.getElementById('list-of-bets').innerHTML = output;
 }
 
 function cancelBets() {

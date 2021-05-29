@@ -169,14 +169,14 @@
     <!-- End Betting dialog box -->
 
     <!-- Begin Confirm Bet dialog box -->
-    <div class="modal" id="confirm-guesses">
+    <div class="modal" id="confirm-bets">
       <div class="modal-title">Confirm Bets</div>
       <form onsubmit="submitForm(event)">
         <div class="modal-content">
-          <div class="list-of-bets"></div>
           <div>
             Are these bets correct?
           </div>
+          <div id="list-of-bets"></div>
         </div>
         <button type="button" class="main-button" onclick="applyDialog()">Yes</button>
         <button type="button" class="main-button" onclick="cancelBets()">No</button>
