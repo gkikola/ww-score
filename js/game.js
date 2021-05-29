@@ -11,7 +11,8 @@ const phases = {
   confirmingGuesses: 2, // Players confirming entered guesses
   betting: 3, // Players are placing bets
   confirmingBets: 4, // Players confirming entered bets
-  revealingAnswer: 5 // End of round, answer revealed and points added up
+  revealingAnswer: 5, // End of round, answer revealed and points added up
+  results: 6 // Round-end summary is shown
 }
 
 var wwApp = {
@@ -45,7 +46,8 @@ var wwApp = {
     remainingGuessers: [],
     remainingBetters: [],
     guessList: [],
-    selectedGuess: null
+    selectedGuess: null,
+    answer: null
   }
 }
 
@@ -83,6 +85,12 @@ function newRound() {
   let state = wwApp.gameState;
   state.round++;
   state.phase = phases.guessing;
+  state.firstBet = true;
+  state.remainingGuessers = [];
+  state.remainingBetters = [];
+  state.guessList = [];
+  state.selectedAnswer = null;
+  state.answer = null;
 
   for (let player of state.players) {
     player.guess = null;
@@ -130,6 +138,9 @@ function updateStatus() {
     case phases.revealingAnswer:
       setStatusMessage('Reveal the Answer');
       iconAction = 'loadDialog(\'do-answer\')';
+      break;
+    case phases.results:
+      setStatusMessage('Displaying Results');
       break;
     }
   }
@@ -561,6 +572,133 @@ function cancelBets() {
   updateStatus();
 }
 
+function revealAnswer() {
+  wwApp.gameState.answer = Number.parseInt(document.getElementById('answer').value);
+
+  if (!Number.isFinite(wwApp.gameState.answer)) {
+    alert('You must enter an answer.');
+  } else {
+    cancelDialog();
+    wwApp.gameState.phase = phases.results;
+    updateStatus();
+    loadDialog('results');
+  }
+}
+
+function showResults() {
+  let state = wwApp.gameState;
+
+  document.getElementById('results-heading').innerHTML = 'Round ' + state.round + ' Results';
+
+  let answer = state.answer;
+  let winningGuess = 0;
+  for (let i = 1; i < state.guessList.length; i++) {
+    let value = state.guessList[i].value;
+
+    if (value <= answer)
+      winningGuess = i;
+    else
+      break;
+  }
+
+  let winningValue = state.guessList[winningGuess].value;
+  let winningPayoutMultiplier = state.guessList[winningGuess].payout;
+  let playerResults = [];
+
+  for (let player of state.players) {
+    let correctGuess = false;
+    let correctBet1 = false;
+    let correctBet2 = false;
+    let netChange = 0;
+
+    // Did the player guess correctly?
+    if (player.guess === winningValue) {
+      correctGuess = true;
+      netChange += wwApp.config.correctAnswerBonus;
+      if (winningValue === answer)
+        netChange += wwApp.config.exactAnswerBonus;
+    }
+
+    // Was the player's first bet on the correct guess?
+    if (player.bet1Guess === winningGuess) {
+      correctBet1 = true;
+
+      let payout = wwApp.config.wagerChipValue1;
+
+      if (player.bet1Amount !== null)
+        payout += player.bet1Amount;
+
+      payout *= winningPayoutMultiplier;
+
+      netChange += payout;
+    } else if (player.bet1Amount !== null) {
+      netChange -= player.bet1Amount;
+    }
+
+    // Was the player's second bet on the correct guess?
+    if (player.bet2Guess === winningGuess) {
+      correctBet2 = true;
+
+      let payout = wwApp.config.wagerChipValue2;
+
+      if (player.bet2Amount !== null)
+        payout += player.bet2Amount;
+
+      payout *= winningPayoutMultiplier;
+
+      netChange += payout;
+    } else if (player.bet2Amount !== null) {
+      netChange -= player.bet2Amount;
+    }
+
+    playerResults.push({
+      name: player.name,
+      correctGuess: correctGuess,
+      correctBet1: correctBet1,
+      correctBet2: correctBet2,
+      netChange: netChange
+    });
+
+    player.cash += netChange;
+  }
+
+  // Sort results by net cash gain/loss
+  playerResults.sort((r1, r2) => r2.netChange - r1.netChange);
+
+  let results = '<table><tr><th>Player</th>';
+  results += '<th class="narrow-heading">Correct Answer?</th>';
+  results += '<th class="narrow-heading">First Bet Correct?</th>';
+  results += '<th class="narrow-heading">Second Bet Correct?</th>';
+  results += '<th class="narrow-heading">Net Gain/Loss</th></tr>';
+
+  let check = '<td class="correct">&check;</td>';
+  let cross = '<td class="incorrect">&cross;</td>';
+
+  for (let pResult of playerResults) {
+    results += '<tr><td>' + pResult.name + '</td>';
+    results += (pResult.correctGuess) ? check : cross;
+    results += (pResult.correctBet1) ? check : cross;
+    results += (pResult.correctBet2) ? check : cross;
+
+    results += '<td class="';
+    if (pResult.netChange > 0)
+      results += 'positive-cash">$+';
+    else if (pResult.netChange < 0)
+      results += 'negative-cash">$';
+    else
+      results += 'zero-cash">$';
+    results += pResult.netChange + '</td>';
+
+    results += '</tr>';
+  }
+
+  results += '</table>';
+
+  document.getElementById('results-body').innerHTML = results;
+
+  updatePlayerList();
+}
+
 function loadDialog(id, playerId = null) {
   document.getElementById('overlay').style.display = 'block';
   document.getElementById(id).style.display = 'block';
@@ -604,6 +742,12 @@ function loadDialog(id, playerId = null) {
     confirmBets();
     break;
   case 'do-answer':
+    let answerBox = document.getElementById('answer');
+    answerBox.value = '';
+    answerBox.focus();
+    break;
+  case 'results':
+    showResults();
     break;
   case 'options':
     loadOptions();
@@ -659,6 +803,12 @@ function applyDialog() {
   case 'confirm-bets':
     wwApp.gameState.phase = phases.revealingAnswer;
     updateStatus();
+    break;
+  case 'do-answer':
+    revealAnswer();
+    return false;
+  case 'results':
+    newRound();
     break;
   case 'options':
     applyOptions();

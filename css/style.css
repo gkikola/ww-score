@@ -60,6 +60,18 @@ th {
   padding: 1px 8px;
 }
 
+th.narrow-heading {
+  width: 32px;
+}
+
+.correct, .positive-cash {
+  color: green;
+}
+
+.incorrect, .negative-cash {
+  color: darkred;
+}
+
 td {
   padding: 1px 8px;
 }
@@ -84,7 +96,7 @@ button {
   width: 128px;
 }
 
-.turn-indicator {
+.turn-indicator, #results-heading {
   font-family: 'Roboto Slab', serif;
   font-size: 24px;
   font-weight: bold;

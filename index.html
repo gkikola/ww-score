@@ -189,12 +189,29 @@
       <div class="modal-title">Correct Answer</div>
       <form onsubmit="submitForm(event)">
         <div class="modal-content">
+          <label for="answer">
+            Enter the correct answer:
+          </label>
+          <input type="number" class="guess-input" id="answer" />
         </div>
         <button type="button" class="main-button" onclick="applyDialog()">Finish</button>
         <button type="button" class="main-button" onclick="cancelDialog()">Cancel</button>
       </form>
     </div>
     <!-- End Answer dialog box -->
+
+    <!-- Begin Results dialog box -->
+    <div class="modal" id="results">
+      <div class="modal-title">Results</div>
+      <form onsubmit="submitForm(event)">
+        <div class="modal-content">
+          <div id="results-heading"></div>
+          <div id="results-body"></div>
+        </div>
+        <button type="button" class="main-button" onclick="applyDialog()">Okay</button>
+      </form>
+    </div>
+    <!-- End Results dialog box -->
 
     <!-- Begin About dialog box -->
     <div class="modal" id="about">
