@@ -66,10 +66,22 @@ window.addEventListener('beforeunload', function (e) {
 function handleKeyPress(e) {
   const key = e.key;
 
-  // Enter should apply the changes in the dialog box
-  if (key === 'Enter') {
-    if (wwApp.appState.dialog.id !== null)
+  if (wwApp.appState.dialog.id !== null) {
+    // Enter should apply the changes in the dialog box
+    if (key === 'Enter') {
       applyDialog();
+    }
+  } else {
+    switch (key) {
+    case 'n':
+      loadDialog('add-player');
+      break;
+    case ' ':
+    case 'Enter':
+      if (wwApp.gameState.players.length > 0)
+        loadDialog(getPhaseAction());
+      break;
+    }
   }
 }
 
@@ -130,6 +142,42 @@ function isGameOver() {
   return false;
 }
 
+function getPhaseMessage() {
+  switch (wwApp.gameState.phase) {
+  default:
+  case phases.guessing:
+    return 'Make Your Guesses';
+  case phases.confirmingGuesses:
+    return 'Confirm Your Guesses';
+  case phases.betting:
+    return 'Place Your Bets';
+  case phases.confirmingBets:
+    return 'Confirm Your Bets';
+  case phases.revealingAnswer:
+    return 'Reveal the Answer';
+  case phases.results:
+    return 'Displaying Results';
+  }
+}
+
+function getPhaseAction() {
+  switch (wwApp.gameState.phase) {
+  default:
+  case phases.guessing:
+    return 'do-guessing';
+  case phases.confirmingGuesses:
+    return 'confirm-guesses';
+  case phases.betting:
+    return 'do-betting';
+  case phases.confirmingBets:
+    return 'confirm-bets';
+  case phases.revealingAnswer:
+    return 'do-answer';
+  case phases.results:
+    return 'results';
+  }
+}
+
 function updateStatus() {
   let config = wwApp.config;
   let state = wwApp.gameState;
@@ -144,32 +192,8 @@ function updateStatus() {
   if (state.players.length < 1) {
     setStatusMessage('Waiting for Players to Join...');
   } else {
-    switch (state.phase) {
-    default:
-    case phases.guessing:
-      setStatusMessage('Make Your Guesses');
-      iconAction = 'loadDialog(\'do-guessing\')';
-      break;
-    case phases.confirmingGuesses:
-      setStatusMessage('Confirm Your Guesses');
-      iconAction = 'loadDialog(\'confirm-guesses\')';
-      break;
-    case phases.betting:
-      setStatusMessage('Place Your Bets');
-      iconAction = 'loadDialog(\'do-betting\')';
-      break;
-    case phases.confirmingBets:
-      setStatusMessage('Confirm Your Bets');
-      iconAction = 'loadDialog(\'confirm-bets\')';
-      break;
-    case phases.revealingAnswer:
-      setStatusMessage('Reveal the Answer');
-      iconAction = 'loadDialog(\'do-answer\')';
-      break;
-    case phases.results:
-      setStatusMessage('Displaying Results');
-      break;
-    }
+    setStatusMessage(getPhaseMessage());
+    iconAction = 'loadDialog(\'' + getPhaseAction() + '\')';
   }
 
   let icon = document.getElementById("message-icon");
