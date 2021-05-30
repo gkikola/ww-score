@@ -53,6 +53,16 @@ var wwApp = {
 
 document.addEventListener('keyup', handleKeyPress);
 
+window.addEventListener('beforeunload', function (e) {
+  // Confirm exit if players have been added
+  if (wwApp.gameState.players.length > 0) {
+    e.preventDefault();
+    e.returnValue = '';
+  } else { // Otherwise, let page unload
+    delete e['returnValue'];
+  }
+});
+
 function handleKeyPress(e) {
   const key = e.key;
 
