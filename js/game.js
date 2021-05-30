@@ -740,13 +740,14 @@ function showVictory() {
   if (winners.length === 1)
     heading = winners[0] + ' is the winner! Congratulations!';
   else {
-    heading = 'It\'s a tie! The winners are ';
+    heading = 'It\'s a tie! The winners are';
     for (let i = 0; i < winners.length; i++) {
+      heading += ' ';
       heading += winners[i];
-      if (i < winners.length - 1)
-        heading += ', ';
+      if (winners.length > 2 && i < winners.length - 1)
+        heading += ',';
       if (i === winners.length - 2)
-        heading += 'and ';
+        heading += ' and';
     }
     heading += '. Congratulations!';
   }
