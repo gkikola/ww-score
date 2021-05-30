@@ -329,6 +329,8 @@ function makeGuess() {
   if (Number.isFinite(guess)) {
     player.guess = guess;
     remaining.shift();
+  } else {
+    alert("You must enter a numeric value.");
   }
 
   if (remaining.length === 0) {
@@ -454,6 +456,9 @@ function updateBetDialog() {
   if (betLimit === null || player.cash < betLimit)
     betLimit = player.cash;
 
+  if (!firstBet && player.bet1Amount !== null)
+    betLimit -= player.bet1Amount;
+
   document.getElementById('bet-dialog-bet-limit').innerHTML = betLimit;
 
   let betAmount = (firstBet) ? player.bet1Amount : player.bet2Amount;
@@ -520,8 +525,11 @@ function placeBet() {
 
   if (maxBet === null || maxBet > player.cash)
     maxBet = player.cash;
+  if (!firstBet && player.bet1Amount !== null)
+    maxBet -= player.bet1Amount;
   if (betAmount > maxBet) {
     alert('You can not bet more than $' + maxBet + '.');
+    return;
   }
 
   if (selection !== null) {
@@ -537,6 +545,7 @@ function placeBet() {
     }
   } else {
     alert('You must select a guess to bet on.');
+    return;
   }
 
   if (remaining.length === 0) {
@@ -593,7 +602,7 @@ function revealAnswer() {
   wwApp.gameState.answer = Number.parseInt(document.getElementById('answer').value);
 
   if (!Number.isFinite(wwApp.gameState.answer)) {
-    alert('You must enter an answer.');
+    alert('You must enter a numeric answer.');
   } else {
     cancelDialog();
     wwApp.gameState.phase = phases.results;
