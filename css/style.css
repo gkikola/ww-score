@@ -132,6 +132,7 @@ button {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background-color: var(--main-color);
+  box-shadow: 1px 1px 3px var(--main-color);
 }
 
 .modal-title {
@@ -196,6 +197,7 @@ button {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background-color: var(--main-color);
+  box-shadow: 1px 1px 3px var(--main-color);
 }
 
 .main-button {
@@ -238,6 +240,7 @@ button {
   background-color: var(--main-color);
   text-align: center;
   margin: 8px;
+  box-shadow: 1px 1px 3px var(--main-color);
 }
 
 .player-name {
@@ -286,12 +289,16 @@ button {
   border-radius: 8px;
 
   cursor: pointer;
+
+  box-shadow: 1px 1px 3px var(--main-color);
 }
 
 .selected-guess {
   background-color: var(--secondary-shade);
   border: 5px solid red;
   padding: 4px;
+
+  box-shadow: 1px 1px 3px red;
 }
 
 .guess-payout {
