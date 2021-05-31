@@ -66,17 +66,38 @@ window.addEventListener('beforeunload', function (e) {
 function handleKeyPress(e) {
   const key = e.key;
 
-  if (wwApp.appState.dialog.id !== null) {
+  let appState = wwApp.appState;
+  let gameState = wwApp.gameState;
+
+  if (appState.dialog.id !== null) {
     // Enter should apply the changes in the dialog box
     if (key === 'Enter') {
       applyDialog();
     } else if (key === 'Escape') { // Escape should cancel
-      if (wwApp.appState.dialog.id === 'confirm-guesses')
+      if (appState.dialog.id === 'confirm-guesses')
         cancelGuesses();
-      else if (wwApp.appState.dialog.id === 'confirm-bets')
+      else if (appState.dialog.id === 'confirm-bets')
         cancelBets();
       else
         cancelDialog();
+    }
+
+    // Arrow keys should change bet selection
+    if (appState.dialog.id === 'do-betting') {
+      if (key === 'ArrowLeft' || key === 'ArrowUp') {
+        if (gameState.selectedGuess === null || gameState.selectedGuess === 0)
+          gameState.selectedGuess = gameState.guessList.length - 1;
+        else
+          gameState.selectedGuess--;
+        updateWagerBoard();
+      } else if (key === 'ArrowRight' || key === 'ArrowDown') {
+        if (gameState.selectedGuess === null
+            || gameState.selectedGuess >= gameState.guessList.length - 1)
+          gameState.selectedGuess = 0;
+        else
+          gameState.selectedGuess++;
+        updateWagerBoard();
+      }
     }
   } else {
     switch (key) {
@@ -85,7 +106,7 @@ function handleKeyPress(e) {
       break;
     case ' ':
     case 'Enter':
-      if (wwApp.gameState.players.length > 0)
+      if (gameState.players.length > 0)
         loadDialog(getPhaseAction());
       break;
     }
