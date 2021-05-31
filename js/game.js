@@ -190,7 +190,7 @@ function updateStatus() {
     roundElem.innerHTML = 'Round ' + state.round;
 
   if (state.players.length < 1) {
-    setStatusMessage('Waiting for Players to Join...');
+    setStatusMessage('Waiting for Players to Be Added...');
   } else {
     setStatusMessage(getPhaseMessage());
     iconAction = 'loadDialog(\'' + getPhaseAction() + '\')';
@@ -350,6 +350,8 @@ function updateGuessDialog() {
     guessInput.value = '';
   else
     guessInput.value = player.guess;
+
+  guessInput.select();
 
   document.getElementById('guess-dialog-turn-indicator').innerHTML = player.name + '\'s Turn';
   document.getElementById('guess-dialog-player-name').innerHTML = player.name;
