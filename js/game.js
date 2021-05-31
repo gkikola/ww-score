@@ -70,6 +70,13 @@ function handleKeyPress(e) {
     // Enter should apply the changes in the dialog box
     if (key === 'Enter') {
       applyDialog();
+    } else if (key === 'Escape') { // Escape should cancel
+      if (wwApp.appState.dialog.id === 'confirm-guesses')
+        cancelGuesses();
+      else if (wwApp.appState.dialog.id === 'confirm-bets')
+        cancelBets();
+      else
+        cancelDialog();
     }
   } else {
     switch (key) {
