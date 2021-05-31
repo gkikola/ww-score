@@ -150,7 +150,7 @@ button {
   overflow: auto;
 
   background-color: var(--bg-color);
-  border: 1px solid var(--border-color);
+  border: none;
   padding: 16px;
   margin: 16px 0;
 }
@@ -336,7 +336,6 @@ button {
 }
 
 #round {
-  font-family: font-family: 'Yanone Kaffeesatz', sans-serif;
   font-size: 24px;
   color: var(--main-color);
   text-transform: uppercase;
