@@ -210,9 +210,10 @@ button {
   border-radius: 8px;
 }
 
-.main-button:hover {
+.main-button:hover, .main-button:focus {
   background-color: var(--secondary-shade);
   color: var(--bg-color);
+  outline: none;
 }
 
 .main-button:active {
@@ -373,7 +374,7 @@ button {
   text-transform: none;
 }
 
-.game-icon:hover {
+.game-icon:hover, .game-icon:active {
   color: var(--bg-color);
   background-color: var(--secondary-shade);
 }
