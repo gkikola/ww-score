@@ -12,7 +12,7 @@
           rel="stylesheet">
     <!-- End Google Fonts -->
 
-    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
     <title>Wits & Wagers Score Keeper</title>
     <script src="js/game.js"></script>
   </head>
@@ -248,7 +248,76 @@
       <div class="modal-title">Help</div>
       <form onsubmit="submitForm(event)">
         <div class="modal-content">
-          <p>Help text will go here</p>
+          <h2>How to Play</h2>
+          <p>
+            You will need a copy of the Wits & Wagers question cards,
+            or you can make up your own questions with numerical answers.
+          </p>
+          <p>
+            To start, add players to the game by pressing the 'add'
+            icon next to the 'Players' heading, or press 'n' on the
+            keyboard. Type in each player's name, and continue adding
+            players until all players are in the game. Players can be
+            added or removed at any time during the game. To edit a
+            player's name or to remove a player, click on the
+            appropriate icon in the player's status box.
+          </p>
+          <p>
+            One player should be designated as the question
+            reader. They should be given the question cards. The game
+            is divided into rounds, and in each round the question
+            reader will read one of the questions. Players will
+            individually write down a guess for the answer, and then
+            the guesses can be entered. Players then bet on which
+            guesses they think are closest to the answer, without
+            going over.
+          </p>
+          <h2>Round Phases</h2>
+          <p>Each round is broken up into the following phases:</p>
+          <ol>
+            <li>
+              <strong>Guessing phase</strong>: After the question
+              reader reads the question, each player's guess is
+              entered.
+            </li>
+            <li>
+              <strong>Guess confirmation phase</strong>: A summary of
+              the guesses that have been made is displayed. If any of
+              the guesses are incorrect, the guessing phase may be
+              restarted. Otherwise, play continues to betting.
+            </li>
+            <li>
+              <strong>Betting phase</strong>: Each player decides
+              which guess(es) they want to bet on. Every player can
+              make two bets. The bets may be both for the same guess,
+              or for two different guesses. Depending on which version
+              of the game rules are in play, each player may be able
+              to wager some of their own chips on each guess.
+            </li>
+            <li>
+              <strong>Bet confirmation phase</strong>: A summary of
+              the bets is displayed. If the bets were not entered
+              correctly, the betting phase can be restarted. Otherwise
+              play continues.
+            </li>
+            <li>
+              <strong>Answer revealing phase</strong>: The question
+              reader reveals the answer, and enters it into the input
+              box.
+            </li>
+            <li>
+              <strong>Results phase</strong>: A summary of the results
+              from the round is displayed. If an end-game condition
+              has occurred, then the winner(s) of the game are
+              displayed.
+            </li>
+          </ol>
+          <h2>Keyboard Shortcuts</h2>
+          <ul>
+            <li>N: Add new player</li>
+            <li>Enter/Space: Move to next phase of the round</li>
+            <li>Arrow keys: Select bets during betting phase</li>
+          </ul>
         </div>
         <button type="button" class="main-button" onclick="cancelDialog()"
                 id="help-okay">Okay</button>
@@ -277,16 +346,16 @@
               <div>
                 <input type="radio" id="limitRounds" name="endCondition"
                        onchange="customizeOptions()">
-                <label for="limitRounds">after
+                <label for="limitRounds">after</label>
                   <input type="number" id="numRounds" class="num-input"
-                         onchange="customizeOptions()"> rounds</label>
+                         onchange="customizeOptions()"> rounds
               </div>
               <div>
                 <input type="radio" id="limitScore" name="endCondition"
                        onchange="customizeOptions()">
-                <label for="limitScore">when someone scores
+                <label for="limitScore">when someone scores</label>
                   <input type="number" id="winningScore" class="num-input"
-                         onchange="customizeOptions()"> points</label>
+                         onchange="customizeOptions()"> points
               </div>
             </fieldset>
           </div>
@@ -308,16 +377,16 @@
           <div class="option">
             <input type="checkbox" id="limitBets"
                    onchange="customizeOptions()">
-            <label for="limitBets">Limit bets to
+            <label for="limitBets">Limit bets to</label>
               <input type="number" id="maxBet" class="num-input"
-                     onchange="customizeOptions()"> chips until the last round</label>
+                     onchange="customizeOptions()"> chips until the last round
           </div>
           <div class="option">
             <input type="checkbox" id="limitBetsLastRound"
                    onchange="customizeOptions()">
-            <label for="limitBetsLastRound">Limit bets in the last round to
+            <label for="limitBetsLastRound">Limit bets in the last round to</label>
               <input type="number" id="maxBetLastRound" class = "num-input"
-                     onchange="customizeOptions()"> chips</label>
+                     onchange="customizeOptions()"> chips
           </div>
           <div class="option">
             <label for="correctAnswerBonus">Correct answer bonus:</label>
