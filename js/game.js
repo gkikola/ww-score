@@ -51,7 +51,7 @@ var wwApp = {
   }
 }
 
-document.addEventListener('keyup', handleKeyPress);
+document.addEventListener('keydown', handleKeyPress);
 
 window.addEventListener('beforeunload', function (e) {
   // Confirm exit if players have been added
@@ -103,11 +103,13 @@ function handleKeyPress(e) {
     switch (key) {
     case 'n':
       loadDialog('add-player');
+      e.preventDefault();
       break;
     case ' ':
     case 'Enter':
-      if (gameState.players.length > 0)
+      if (gameState.players.length > 0) {
         loadDialog(getPhaseAction());
+      }
       break;
     }
   }
