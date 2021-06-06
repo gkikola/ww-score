@@ -120,6 +120,13 @@ function submitForm(e) {
   e.preventDefault();
 }
 
+// Sanitize HTML from inputs
+function sanitize(string) {
+  let elem = document.createElement('div');
+  elem.innerText = string;
+  return elem.innerHTML;
+}
+
 function newGame() {
   let state = wwApp.gameState;
 
@@ -910,12 +917,12 @@ function applyDialog() {
     newGame();
     break;
   case 'add-player':
-    if (!addPlayer(document.getElementById('player-name').value))
+    if (!addPlayer(sanitize(document.getElementById('player-name').value)))
       return false;
     break;
   case 'edit-player':
     let player = getPlayer(playerId);
-    player.name = document.getElementById('new-player-name').value;
+    player.name = sanitize(document.getElementById('new-player-name').value);
 
     let cashOverride = document.getElementById('player-cash-override').value;
     let newCash = Number.parseInt(cashOverride, 10);
