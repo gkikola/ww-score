@@ -3,7 +3,7 @@
 Play along with the popular board game Wits and Wagers by [North Star
 Games](https://www.northstargames.com/) using this score keeper.
 
-[Live version](https://www.gregkikola.com/projects/ww-score/)
+[View Live Version](https://www.gregkikola.com/ww-score/)
 
 
 # License
